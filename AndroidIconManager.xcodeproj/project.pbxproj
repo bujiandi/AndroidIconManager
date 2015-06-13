@@ -1,0 +1,483 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3993B34D1B2AD2F400269032 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B34C1B2AD2F400269032 /* AppDelegate.swift */; };
+		3993B34F1B2AD2F400269032 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B34E1B2AD2F400269032 /* ViewController.swift */; };
+		3993B3511B2AD2F400269032 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3993B3501B2AD2F400269032 /* Assets.xcassets */; };
+		3993B3541B2AD2F500269032 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3993B3521B2AD2F500269032 /* Main.storyboard */; };
+		3993B3631B2AD36000269032 /* Util.h in Headers */ = {isa = PBXBuildFile; fileRef = 3993B3621B2AD36000269032 /* Util.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3993B3751B2AD36000269032 /* Util.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3993B3601B2AD36000269032 /* Util.framework */; };
+		3993B3761B2AD36000269032 /* Util.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3993B3601B2AD36000269032 /* Util.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3993B3831B2AD4AA00269032 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B3821B2AD4AA00269032 /* Date.swift */; };
+		3993B3871B2AD4BC00269032 /* String+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B3841B2AD4BC00269032 /* String+JSON.swift */; };
+		3993B3881B2AD4BC00269032 /* String+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B3851B2AD4BC00269032 /* String+Util.swift */; };
+		3993B3891B2AD4BC00269032 /* SupportCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B3861B2AD4BC00269032 /* SupportCode.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3993B3731B2AD36000269032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3993B3411B2AD2F400269032 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3993B35F1B2AD36000269032;
+			remoteInfo = Util;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3993B37A1B2AD36000269032 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3993B3761B2AD36000269032 /* Util.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		3993B3491B2AD2F400269032 /* AndroidIconManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidIconManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3993B34C1B2AD2F400269032 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3993B34E1B2AD2F400269032 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3993B3501B2AD2F400269032 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3993B3531B2AD2F500269032 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3993B3551B2AD2F500269032 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3993B3601B2AD36000269032 /* Util.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Util.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3993B3621B2AD36000269032 /* Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		3993B3641B2AD36000269032 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3993B37F1B2AD3B200269032 /* Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Test.playground; sourceTree = "<group>"; };
+		3993B3821B2AD4AA00269032 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Date.swift; path = Test.playground/Sources/Date.swift; sourceTree = SOURCE_ROOT; };
+		3993B3841B2AD4BC00269032 /* String+JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+JSON.swift"; path = "Test.playground/Sources/String+JSON.swift"; sourceTree = SOURCE_ROOT; };
+		3993B3851B2AD4BC00269032 /* String+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "String+Util.swift"; path = "Test.playground/Sources/String+Util.swift"; sourceTree = SOURCE_ROOT; };
+		3993B3861B2AD4BC00269032 /* SupportCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SupportCode.swift; path = Test.playground/Sources/SupportCode.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3993B3461B2AD2F400269032 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3993B3751B2AD36000269032 /* Util.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3993B35C1B2AD36000269032 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3993B3401B2AD2F400269032 = {
+			isa = PBXGroup;
+			children = (
+				3993B37F1B2AD3B200269032 /* Test.playground */,
+				3993B34B1B2AD2F400269032 /* AndroidIconManager */,
+				3993B3611B2AD36000269032 /* Util */,
+				3993B34A1B2AD2F400269032 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3993B34A1B2AD2F400269032 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3993B3491B2AD2F400269032 /* AndroidIconManager.app */,
+				3993B3601B2AD36000269032 /* Util.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3993B34B1B2AD2F400269032 /* AndroidIconManager */ = {
+			isa = PBXGroup;
+			children = (
+				3993B34C1B2AD2F400269032 /* AppDelegate.swift */,
+				3993B34E1B2AD2F400269032 /* ViewController.swift */,
+				3993B3501B2AD2F400269032 /* Assets.xcassets */,
+				3993B3521B2AD2F500269032 /* Main.storyboard */,
+				3993B3551B2AD2F500269032 /* Info.plist */,
+			);
+			path = AndroidIconManager;
+			sourceTree = "<group>";
+		};
+		3993B3611B2AD36000269032 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				3993B3811B2AD46900269032 /* value */,
+				3993B3801B2AD45100269032 /* extension */,
+				3993B37E1B2AD39000269032 /* net */,
+				3993B3621B2AD36000269032 /* Util.h */,
+				3993B3641B2AD36000269032 /* Info.plist */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		3993B37E1B2AD39000269032 /* net */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = net;
+			sourceTree = "<group>";
+		};
+		3993B3801B2AD45100269032 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				3993B3841B2AD4BC00269032 /* String+JSON.swift */,
+				3993B3851B2AD4BC00269032 /* String+Util.swift */,
+				3993B3861B2AD4BC00269032 /* SupportCode.swift */,
+			);
+			name = extension;
+			sourceTree = "<group>";
+		};
+		3993B3811B2AD46900269032 /* value */ = {
+			isa = PBXGroup;
+			children = (
+				3993B3821B2AD4AA00269032 /* Date.swift */,
+			);
+			name = value;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3993B35D1B2AD36000269032 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3993B3631B2AD36000269032 /* Util.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3993B3481B2AD2F400269032 /* AndroidIconManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3993B3581B2AD2F500269032 /* Build configuration list for PBXNativeTarget "AndroidIconManager" */;
+			buildPhases = (
+				3993B3451B2AD2F400269032 /* Sources */,
+				3993B3461B2AD2F400269032 /* Frameworks */,
+				3993B3471B2AD2F400269032 /* Resources */,
+				3993B37A1B2AD36000269032 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3993B3741B2AD36000269032 /* PBXTargetDependency */,
+			);
+			name = AndroidIconManager;
+			productName = AndroidIconManager;
+			productReference = 3993B3491B2AD2F400269032 /* AndroidIconManager.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3993B35F1B2AD36000269032 /* Util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3993B3771B2AD36000269032 /* Build configuration list for PBXNativeTarget "Util" */;
+			buildPhases = (
+				3993B35B1B2AD36000269032 /* Sources */,
+				3993B35C1B2AD36000269032 /* Frameworks */,
+				3993B35D1B2AD36000269032 /* Headers */,
+				3993B35E1B2AD36000269032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Util;
+			productName = Util;
+			productReference = 3993B3601B2AD36000269032 /* Util.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3993B3411B2AD2F400269032 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "慧趣小歪";
+				TargetAttributes = {
+					3993B3481B2AD2F400269032 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					3993B35F1B2AD36000269032 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+				};
+			};
+			buildConfigurationList = 3993B3441B2AD2F400269032 /* Build configuration list for PBXProject "AndroidIconManager" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3993B3401B2AD2F400269032;
+			productRefGroup = 3993B34A1B2AD2F400269032 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3993B3481B2AD2F400269032 /* AndroidIconManager */,
+				3993B35F1B2AD36000269032 /* Util */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3993B3471B2AD2F400269032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3993B3511B2AD2F400269032 /* Assets.xcassets in Resources */,
+				3993B3541B2AD2F500269032 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3993B35E1B2AD36000269032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3993B3451B2AD2F400269032 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3993B34F1B2AD2F400269032 /* ViewController.swift in Sources */,
+				3993B34D1B2AD2F400269032 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3993B35B1B2AD36000269032 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3993B3891B2AD4BC00269032 /* SupportCode.swift in Sources */,
+				3993B3881B2AD4BC00269032 /* String+Util.swift in Sources */,
+				3993B3871B2AD4BC00269032 /* String+JSON.swift in Sources */,
+				3993B3831B2AD4AA00269032 /* Date.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3993B3741B2AD36000269032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3993B35F1B2AD36000269032 /* Util */;
+			targetProxy = 3993B3731B2AD36000269032 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3993B3521B2AD2F500269032 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3993B3531B2AD2F500269032 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3993B3561B2AD2F500269032 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3993B3571B2AD2F500269032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		3993B3591B2AD2F500269032 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = AndroidIconManager/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccjty.AndroidIconManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3993B35A1B2AD2F500269032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = AndroidIconManager/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccjty.AndroidIconManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		3993B3781B2AD36000269032 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Util/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccjty.Util;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		3993B3791B2AD36000269032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Util/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ccjty.Util;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3993B3441B2AD2F400269032 /* Build configuration list for PBXProject "AndroidIconManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3993B3561B2AD2F500269032 /* Debug */,
+				3993B3571B2AD2F500269032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3993B3581B2AD2F500269032 /* Build configuration list for PBXNativeTarget "AndroidIconManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3993B3591B2AD2F500269032 /* Debug */,
+				3993B35A1B2AD2F500269032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3993B3771B2AD36000269032 /* Build configuration list for PBXNativeTarget "Util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3993B3781B2AD36000269032 /* Debug */,
+				3993B3791B2AD36000269032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3993B3411B2AD2F400269032 /* Project object */;
+}
