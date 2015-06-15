@@ -13,7 +13,7 @@ extension String {
         let demangleName = _stdlib_demangleName(name)
         return demangleName.componentsSeparatedByString(".").last!
     }
-//
+
 //    static func typeNameFromAny(thing:Any) -> String {
 //        let name = _stdlib_getTypeName(thing)
 //        let demangleName = _stdlib_demangleName(name)
@@ -143,7 +143,7 @@ extension String {
         case .Prefix:
             for char:Character in characters {
                 switch char {
-                    case " ", "\n", "\r":
+                case " ", "\n", "\r", "\r\n":   // \r\n 是一个字符  \n\r 是2个字符
                     start++
                 default:
                     return substringFromIndex(start)
@@ -153,7 +153,7 @@ extension String {
             let chars = characters.reverse()
             for char:Character in chars {
                 switch char {
-                case " ", "\n", "\r":
+                case " ", "\n", "\r", "\r\n":   // \r\n 是一个字符  \n\r 是2个字符
                     start++
                 default:
                     return substringToIndex(chars.count - start)
