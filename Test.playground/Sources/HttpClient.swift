@@ -132,8 +132,8 @@ class HttpClient: NSObject {
             } else {
                 do {
                     let number = try fileManager.attributesOfItemAtPath(filePath)["fileSize"] as! NSNumber
+                    size = number.unsignedLongLongValue
                 } catch {}
-                size = number.unsignedLongLongValue
             }
         } else {
             fileManager.createFileAtPath(path + ".download", contents: nil, attributes: nil)
