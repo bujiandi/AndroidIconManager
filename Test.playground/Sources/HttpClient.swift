@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 class HttpClient: NSObject {
     
     //URL 解编码

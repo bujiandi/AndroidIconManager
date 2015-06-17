@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>BA7FB6DE-79B0-48F9-BDEB-905D02F3F401</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JSON</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>
+		<string>https://github.com/bujiandi/AndroidIconManager.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>JSON.playground</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/bujiandi/AndroidIconManager.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AndroidIconManager</string>
+		</dict>
+	</array>
+</dict>
+</plist>
