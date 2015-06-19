@@ -1,16 +1,28 @@
 import Foundation
 
 // MARK: - http 应答结果
-public class HttpResponse {
+public class HttpState {
     public var state:Int = 0
-    public var content:String = ""
     public var error:NSError?
+    public var timestamp:NSTimeInterval = 0
+}
+
+public class HttpResponse:HttpState {
+    public var content:String = ""
+
+}
+
+public class HttpDownload:HttpState {
+    public var totalSize:Int64 = 0
+    public var localSize:Int64 = 0
+    public var localPath:String = ""
 }
 
 // MARK: - http 网络访问
 public class HttpRequest {
     
     public typealias OnHttpRequestComplete = (HttpResponse) -> Void
+    public typealias OnHttpRequestDownload = (HttpDownload) -> Void
     
     private let _url:NSURL
     public var url:NSURL { return _url }
@@ -41,26 +53,33 @@ public class HttpRequest {
         self.init(URL:url, post:post, headers:nil, timeout:timeout)
     }
     
-    
     class ConnectObject : NSObject, NSURLConnectionDelegate {
         var onStop:() -> Void
         init (onStop:() -> Void) {
             self.onStop = onStop
         }
-        
+
         var connection:NSURLConnection? = nil
         var receiveData:NSMutableData? = nil
         
         var onComplete:OnHttpRequestComplete?
+        var onDownload:OnHttpRequestDownload?
+        
+        var isCancel:Bool = false
 
         func cancel() {
-            
+            isCancel = true
+            connection?.cancel()
         }
         
         //接收到服务器回应的时候调用此方法
-        func connection(connection: NSURLConnection!, didReceiveResponse response: NSURLResponse!) {
+        func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
             //let httpResponse = response as NSHTTPURLResponse
             receiveData = NSMutableData()
+            if let onDownloadOver = onDownload {
+                let path = connection.currentRequest.URL!. downloadCachePathWithURL(connection.currentRequest.URL!)
+
+            }
             if let onDownloadComplete = onDownloadOver {
                 let path = downloadCachePathWithURL(connection.currentRequest.URL!)
                 if let data = NSData(contentsOfFile: path + ".download") {
@@ -182,6 +201,8 @@ public class HttpRequest {
         }
         return request
     }
+    
+    var isConnecting:Bool { !(_connect?.isCancel ?? true) }
 
     private var _connect:ConnectObject?
     public func send(onComplete:OnHttpRequestComplete) {
