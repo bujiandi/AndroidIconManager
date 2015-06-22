@@ -2,20 +2,51 @@ import Foundation
 
 // MARK: - http 应答结果
 public class HttpState {
-    public var state:Int = 0
-    public var error:NSError?
+    
+    /// HTTP 访问 错误信息
+    public var error:ErrorType?
+    
+    /// 服务端响应头字段
+    public var headerFields:NSDictionary = [:]
+    
+    /// 服务器时间戳
     public var timestamp:NSTimeInterval = 0
+    public var serverDate:Date { return Date(timestamp) }
+    /// HTTP 状态代码
+    public var statusCode:Int = 0
+    
+    /// HTTP 状态文字描述
+    public var statusString:String {
+        return NSHTTPURLResponse.localizedStringForStatusCode(statusCode)
+    }
 }
 
 public class HttpResponse:HttpState {
+    
+    /// 访问结果 HTML 内容
     public var content:String = ""
 
 }
 
 public class HttpDownload:HttpState {
-    public var totalSize:Int64 = 0
-    public var localSize:Int64 = 0
+    
+    /// 文件总大小
+    public var totalSize:UInt64 = 0
+    
+    /// 已下载大小
+    public var localSize:UInt64 = 0
+    
+    /// 本地下载路径
     public var localPath:String = ""
+    
+    /// 下载结束标记(如果下载结束, 无论成功失败都为 true)
+    public var isOver:Bool = false
+    
+    /// 下载进度百分比
+    public var progressPercent:Double {
+        if totalSize == 0 { return 0 }
+        return ceil(Double(localSize / totalSize) * 100)
+    }
 }
 
 // MARK: - http 网络访问
@@ -29,41 +60,115 @@ public class HttpRequest {
     public var post:[String:String]?
     public var headers:[String:String]?
     public var timeout:NSTimeInterval = 15
+    public var tag:Any? = nil
     
-    public init(URL url:NSURL, post:[String:String]?, headers:[String:String]?, timeout:NSTimeInterval = 15) {
+    public init(URL url:NSURL, post:[String:String]?, tag:Any? = nil, headers:[String:String]?, timeout:NSTimeInterval = 15) {
         self._url = url
         self.post = post
+        self.tag  = tag
         self.headers = headers
         self.timeout = timeout
     }
     
-    public convenience init(URL url:NSURL) {
-        self.init(URL:url, post:nil, headers:nil)
+    public convenience init(URL url:NSURL, tag:Any? = nil) {
+        self.init(URL:url, post:nil, tag:tag, headers:nil)
     }
     
-    public convenience init(URL url:NSURL, timeout:NSTimeInterval) {
-        self.init(URL:url, post:nil, headers:nil, timeout:timeout)
+    public convenience init(URL url:NSURL, tag:Any? = nil, timeout:NSTimeInterval) {
+        self.init(URL:url, post:nil, tag:tag, headers:nil, timeout:timeout)
     }
     
-    public convenience init(URL url:NSURL, post:[String:String]?) {
-        self.init(URL:url, post:post, headers:nil)
+    public convenience init(URL url:NSURL, post:[String:String]?, tag:Any? = nil) {
+        self.init(URL:url, post:post, tag:tag, headers:nil)
     }
     
-    public convenience init(URL url:NSURL, post:[String:String]?, timeout:NSTimeInterval) {
-        self.init(URL:url, post:post, headers:nil, timeout:timeout)
+    public convenience init(URL url:NSURL, post:[String:String]?, tag:Any? = nil, timeout:NSTimeInterval) {
+        self.init(URL:url, post:post, tag:tag, headers:nil, timeout:timeout)
     }
     
-    class ConnectObject : NSObject, NSURLConnectionDelegate {
+    class DownloadListener: ConnectListener {
+        init (localPath:String, onStop:() -> Void) {
+            super.init(onStop: onStop)
+            self.response = HttpDownload()
+            fileHandle = NSFileHandle(forWritingAtPath: "\(localPath).download")
+            
+            downloadResponse.localPath = localPath
+            downloadResponse.localSize = fileHandle?.seekToEndOfFile() ?? 0
+        }
+        
+        var fileHandle: NSFileHandle?
+        var downloadResponse:HttpDownload { return response as! HttpDownload }
+        var onProgress:OnHttpRequestDownload?
+        
+        //接收到服务器回应的时候调用此方法
+        override func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
+            super.connection(connection, didReceiveResponse: response)
+            receiveData = nil
+            // 获取将下载的文件大小 从 HeaderField  // Content-Length
+            let downloadResponse = self.downloadResponse
+            downloadResponse.totalSize ??= downloadResponse.headerFields["Content-Length"]
+            
+            onProgress?(downloadResponse)
+        }
+        
+        //接收到服务器传输数据的时候调用，此方法根据数据大小执行若干次
+        override func connection(connection: NSURLConnection, didReceiveData data: NSData) {
+            downloadResponse.localSize += UInt64(data.length)
+            fileHandle?.writeData(data)
+            onProgress?(downloadResponse)
+        }
+        
+        //数据传完之后调用此方法
+        override func connectionDidFinishLoading(connection: NSURLConnection) {
+            fileHandle?.closeFile()
+            fileHandle = nil
+            
+            let downloadResponse = self.downloadResponse
+            downloadResponse.isOver = true
+            let fileManager = NSFileManager.defaultManager()
+            let path:String = downloadResponse.localPath
+            do {
+                try fileManager.moveItemAtPath("\(path).download", toPath: path)
+            } catch let error {
+                downloadResponse.error = error
+            }
+            
+            onStop()
+            onProgress?(downloadResponse)
+        }
+        
+        //网络请求过程中，出现任何错误（断网，连接超时等）会进入此方法
+        override func connection(connection: NSURLConnection, didFailWithError error: NSError) {
+            fileHandle?.closeFile()
+            fileHandle = nil
+            
+            let downloadResponse = self.downloadResponse
+            downloadResponse.error = error
+            downloadResponse.isOver = true
+            onStop()
+            onProgress?(downloadResponse)
+        }
+        
+        deinit {
+            fileHandle?.closeFile()
+            fileHandle = nil
+        }
+    }
+    
+    class ConnectListener : NSObject, NSURLConnectionDelegate {
         var onStop:() -> Void
         init (onStop:() -> Void) {
             self.onStop = onStop
+            self.response = HttpResponse()
         }
-
+        
+        var httpResponse:HttpResponse { return response as! HttpResponse }
+        var response:HttpState
+        
         var connection:NSURLConnection? = nil
         var receiveData:NSMutableData? = nil
         
         var onComplete:OnHttpRequestComplete?
-        var onDownload:OnHttpRequestDownload?
         
         var isCancel:Bool = false
 
@@ -76,103 +181,56 @@ public class HttpRequest {
         func connection(connection: NSURLConnection, didReceiveResponse response: NSURLResponse) {
             //let httpResponse = response as NSHTTPURLResponse
             receiveData = NSMutableData()
-            if let onDownloadOver = onDownload {
-                let path = connection.currentRequest.URL!. downloadCachePathWithURL(connection.currentRequest.URL!)
-
+            
+            guard let res = response as? NSHTTPURLResponse else {
+                print("无法显示网络响应")
+                return
             }
-            if let onDownloadComplete = onDownloadOver {
-                let path = downloadCachePathWithURL(connection.currentRequest.URL!)
-                if let data = NSData(contentsOfFile: path + ".download") {
-                    receiveData!.appendData(data)
-                }
-                if let res = response as? NSHTTPURLResponse {
-                    let length = res.allHeaderFields["Content-Length"] as! NSString
-                    topbytes = UInt64(length.longLongValue)
-                }
-                onDownloadComplete(topbytes: topbytes, data: receiveData, error: nil, finishPath: nil)
-            }
+            
+            let dateString = res.allHeaderFields["Date"] ?? "Thu, 01 Jan 1970 00:00:00 GMT"
+            
+            let format  = NSDateFormatter()
+            format.locale = NSLocale(localeIdentifier: "en_US")
+            format.dateFormat = "EEE, dd MMM yyyy HH:mm:ss Z"
+            
+            let date:NSDate? = format.dateFromString(dateString)
+            
+            self.response.timestamp = date?.timeIntervalSince1970 ?? 0
+            self.response.statusCode = res.statusCode
+            self.response.headerFields = res.allHeaderFields
         }
         
         //接收到服务器传输数据的时候调用，此方法根据数据大小执行若干次
-        func connection(connection: NSURLConnection!, didReceiveData data: NSData!) {
+        func connection(connection: NSURLConnection, didReceiveData data: NSData) {
             if receiveData == nil {
                 receiveData = NSMutableData()
             }
-            //receiveData!.appendData(data)
-            if let onDownloadComplete = onDownloadOver {
-                if fileHandle == nil {
-                    let path = downloadCachePathWithURL(connection.currentRequest.URL!)
-                    fileHandle = NSFileHandle(forWritingAtPath: path + ".download")
-                }
-                fileHandle.seekToEndOfFile()
-                fileHandle.writeData(data)
-                onDownloadComplete(topbytes: topbytes, data: receiveData, error: nil, finishPath: nil)
-            }
-            
-            if let receive = receiveData {
-                receive.appendData(data)
-            } else {
-                receiveData = NSMutableData()
-                receiveData!.appendData(data)
-            }
+            receiveData!.appendData(data)
         }
         
         //数据传完之后调用此方法
-        func connectionDidFinishLoading(connection: NSURLConnection!) {
+        func connectionDidFinishLoading(connection: NSURLConnection) {
             self.connection = nil
             // 如果是Http访问
-            if let complete = onHttpOver {
-                let html:String = NSString(data: receiveData!, encoding: NSUTF8StringEncoding)! as String
-                complete(html: html,error: nil)
-                onHttpOver = nil
-            }
-            // 如果是Http下载
-            if let onDownloadComplete = onDownloadOver {
-                
-                if let handle = fileHandle {
-                    handle.closeFile()
-                    fileHandle = nil
-                }
-                
-                let url = connection.currentRequest.URL!
-                let path = downloadCachePathWithURL(url)
-                
-                let fileManager = NSFileManager.defaultManager()
-                do {
-                    try fileManager.moveItemAtPath(path + ".download", toPath: path)
-                } catch {}
-                
-                
-                onDownloadOver = nil
-                topbytes = 0
-                onDownloadComplete(topbytes: topbytes, data: receiveData, error: nil, finishPath: path)
+            if onComplete != nil {
+                httpResponse.content = NSString(data: receiveData!, encoding: NSUTF8StringEncoding)! as String
             }
             receiveData = nil
+            onStop()
+            onComplete?(httpResponse)
         }
         
         //网络请求过程中，出现任何错误（断网，连接超时等）会进入此方法
         func connection(connection: NSURLConnection, didFailWithError error: NSError) {
             self.connection = nil
-            // 如果是Http访问
-            if let complete = onHttpOver {
-                complete(html: "",error: error)
-                onHttpOver = nil
-            }
-            // 如果是Http下载
-            if let onDownloadComplete = onDownloadOver {
-                
-                if let handle = fileHandle {
-                    handle.closeFile()
-                    fileHandle = nil
-                }
-                
-                
-                onDownloadOver = nil
-                topbytes = 0
-                onDownloadComplete(topbytes: topbytes, data: receiveData, error: error, finishPath: nil)
-                
-            }
             receiveData = nil
+            httpResponse.error = error
+            onStop()
+            onComplete?(httpResponse)
+        }
+        
+        deinit {
+            print("已卸载")
         }
     }
     
@@ -202,22 +260,36 @@ public class HttpRequest {
         return request
     }
     
-    var isConnecting:Bool { !(_connect?.isCancel ?? true) }
+    var isConnecting:Bool { return !(_listener?.isCancel ?? true) }
 
-    private var _connect:ConnectObject?
+    private var _listener:ConnectListener?
     public func send(onComplete:OnHttpRequestComplete) {
-        if _connect != nil {
-            _connect!.cancel()
+        if let listener = _listener {
+            listener.cancel()
         }
-        let connect = ConnectObject() { self._connect = nil }
-        connect.onComplete = onComplete
+        let listener = ConnectListener() { self._listener = nil }
+        listener.onComplete = onComplete
         
         let request:NSMutableURLRequest = HttpRequest.getURLRequest(self)
         
         //连接服务器
-        _connect = connect
-        connect.connection = NSURLConnection(request: request, delegate: connect)
+        _listener = listener
+        listener.connection = NSURLConnection(request: request, delegate: listener)
 
+    }
+    
+    public func downloadTo(localPath:String, onProgress:OnHttpRequestDownload) {
+        if let listener = _listener {
+            listener.cancel()
+        }
+        let listener = DownloadListener(localPath: localPath) { self._listener = nil }
+        
+        listener.onProgress = onProgress
+        
+        let request:NSMutableURLRequest = HttpRequest.getURLRequest(self)
+        _listener = listener
+        listener.connection = NSURLConnection(request: request, delegate: listener)
+        
     }
     
 }

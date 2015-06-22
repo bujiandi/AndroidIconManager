@@ -22,6 +22,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print(tttt)
         print(m.hashValue)
 
+        let http = HttpRequest(URL: NSURL(string: "http://www.cocoachina.com")!)
+        http.send { (response) -> Void in
+            
+            print(response.headerFields)
+        }
         // Insert code here to initialize your application
     }
 

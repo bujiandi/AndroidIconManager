@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		393AE9101B3809A200969420 /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393AE90F1B3809A200969420 /* HttpRequest.swift */; };
 		396A1F6F1B2E928F006C9011 /* Array+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A1F6E1B2E928F006C9011 /* Array+Utils.swift */; };
 		396A1F711B2E929C006C9011 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A1F701B2E929C006C9011 /* HttpClient.swift */; };
 		3993B34D1B2AD2F400269032 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B34C1B2AD2F400269032 /* AppDelegate.swift */; };
@@ -46,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		393AE90F1B3809A200969420 /* HttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpRequest.swift; path = Test.playground/Sources/HttpRequest.swift; sourceTree = SOURCE_ROOT; };
 		396A1F6E1B2E928F006C9011 /* Array+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Utils.swift"; path = "Test.playground/Sources/Array+Utils.swift"; sourceTree = SOURCE_ROOT; };
 		396A1F701B2E929C006C9011 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpClient.swift; path = Test.playground/Sources/HttpClient.swift; sourceTree = SOURCE_ROOT; };
 		3993B3491B2AD2F400269032 /* AndroidIconManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidIconManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				396A1F701B2E929C006C9011 /* HttpClient.swift */,
+				393AE90F1B3809A200969420 /* HttpRequest.swift */,
 			);
 			name = net;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				3993B3831B2AD4AA00269032 /* Date.swift in Sources */,
 				396A1F711B2E929C006C9011 /* HttpClient.swift in Sources */,
 				396A1F6F1B2E928F006C9011 /* Array+Utils.swift in Sources */,
+				393AE9101B3809A200969420 /* HttpRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,7 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
     var timeInterval:NSTimeInterval = 0
     
     public init() { self.timeInterval = NSDate().timeIntervalSince1970 }
+    public static var zeroDate:Date { return Date(0) }
     
     // MARK: - 构造函数
     public init(year:Int, month:Int = 1, day:Int = 1, hour:Int = 0, minute:Int = 0, second:Int = 0) {
@@ -56,7 +57,7 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
         timeInterval = NSDate(timeIntervalSinceReferenceDate: sinceReferenceDate).timeIntervalSince1970
     }
     
-    public init(_ v: String, style: NSDateFormatterStyle) {
+    public init?(_ v: String, style: NSDateFormatterStyle) {
         let formatter = NSDateFormatter()
         formatter.dateStyle = style
         if let date = formatter.dateFromString(v) {
@@ -66,6 +67,7 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
             if let date = formatter.dateFromString(v) {
                 self.timeInterval = date.timeIntervalSince1970
             } else {
+                return nil
                 #if DEBUG
                     assert("日期字符串格式异常[\(v)] at line:\(__LINE__) at column:\(__COLUMN__)")//__FILE__,__FUNCTION__
                 #endif
@@ -73,12 +75,14 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
         }
     }
     
-    public init(_ v: String, dateFormat:String = "yyyy-MM-dd HH:mm:ss") {
+    public init?(_ v: String, dateFormat:String = "yyyy-MM-dd HH:mm:ss") {
         let formatter = NSDateFormatter()
         formatter.dateFormat = dateFormat
         if let date = formatter.dateFromString(v) {
             self.timeInterval = date.timeIntervalSince1970
         } else {
+            return nil
+
             #if DEBUG
                 assert("日期字符串格式异常[\(v)] at line:\(__LINE__) at column:\(__COLUMN__)")//__FILE__,__FUNCTION__
             #endif
