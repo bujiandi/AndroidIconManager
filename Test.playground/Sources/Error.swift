@@ -22,7 +22,7 @@ public func ==(lhs: Error, rhs: Error) -> Bool {
 }
 
 
-public enum Error : Equatable {
+public enum Error : Equatable, ErrorType {
     case OK
     case Warning(content:String)
     case Error(code:Int, content:String, userInfo:Any?)

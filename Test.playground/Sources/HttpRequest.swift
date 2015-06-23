@@ -1,7 +1,16 @@
 import Foundation
 
+
+
 // MARK: - http 应答结果
-public class HttpState {
+
+public class HttpResponse {
+    
+    /// 访问结果 HTML 内容
+    public var content:String = ""
+    
+    /// 附加信息
+    public var tag:Any?
     
     /// HTTP 访问 错误信息
     public var error:ErrorType?
@@ -12,23 +21,19 @@ public class HttpState {
     /// 服务器时间戳
     public var timestamp:NSTimeInterval = 0
     public var serverDate:Date { return Date(timestamp) }
+    
     /// HTTP 状态代码
     public var statusCode:Int = 0
+    public var isCancel:Bool { return statusCode < 0 }
     
     /// HTTP 状态文字描述
     public var statusString:String {
         return NSHTTPURLResponse.localizedStringForStatusCode(statusCode)
     }
-}
-
-public class HttpResponse:HttpState {
-    
-    /// 访问结果 HTML 内容
-    public var content:String = ""
 
 }
 
-public class HttpDownload:HttpState {
+public class HttpDownload:HttpResponse {
     
     /// 文件总大小
     public var totalSize:UInt64 = 0
@@ -37,7 +42,7 @@ public class HttpDownload:HttpState {
     public var localSize:UInt64 = 0
     
     /// 本地下载路径
-    public var localPath:String = ""
+    public var localPath:String { return content }
     
     /// 下载结束标记(如果下载结束, 无论成功失败都为 true)
     public var isOver:Bool = false
@@ -92,7 +97,7 @@ public class HttpRequest {
             self.response = HttpDownload()
             fileHandle = NSFileHandle(forWritingAtPath: "\(localPath).download")
             
-            downloadResponse.localPath = localPath
+            downloadResponse.content = localPath
             downloadResponse.localSize = fileHandle?.seekToEndOfFile() ?? 0
         }
         
@@ -149,6 +154,11 @@ public class HttpRequest {
             onProgress?(downloadResponse)
         }
         
+        override func cancel() {
+            cancelConnection()
+            onProgress?(downloadResponse)
+        }
+        
         deinit {
             fileHandle?.closeFile()
             fileHandle = nil
@@ -162,8 +172,8 @@ public class HttpRequest {
             self.response = HttpResponse()
         }
         
-        var httpResponse:HttpResponse { return response as! HttpResponse }
-        var response:HttpState
+        var httpResponse:HttpResponse { return response }
+        var response:HttpResponse
         
         var connection:NSURLConnection? = nil
         var receiveData:NSMutableData? = nil
@@ -172,9 +182,15 @@ public class HttpRequest {
         
         var isCancel:Bool = false
 
-        func cancel() {
+        private func cancelConnection() {
             isCancel = true
             connection?.cancel()
+            onStop()
+            response.statusCode = -1
+        }
+        func cancel() {
+            cancelConnection()
+            onComplete?(response)
         }
         
         //接收到服务器回应的时候调用此方法
@@ -228,10 +244,6 @@ public class HttpRequest {
             onStop()
             onComplete?(httpResponse)
         }
-        
-        deinit {
-            print("已卸载")
-        }
     }
     
     private class func getURLRequest(http:HttpRequest) -> NSMutableURLRequest {
@@ -260,7 +272,11 @@ public class HttpRequest {
         return request
     }
     
-    var isConnecting:Bool { return !(_listener?.isCancel ?? true) }
+    public var isConnecting:Bool { return !(_listener?.isCancel ?? true) }
+    public var isCancel:Bool { return !(_listener?.isCancel ?? false) }
+    public func cancel() {
+        _listener?.cancel()
+    }
 
     private var _listener:ConnectListener?
     public func send(onComplete:OnHttpRequestComplete) {
@@ -269,6 +285,7 @@ public class HttpRequest {
         }
         let listener = ConnectListener() { self._listener = nil }
         listener.onComplete = onComplete
+        listener.response.tag = self.tag
         
         let request:NSMutableURLRequest = HttpRequest.getURLRequest(self)
         
@@ -285,6 +302,7 @@ public class HttpRequest {
         let listener = DownloadListener(localPath: localPath) { self._listener = nil }
         
         listener.onProgress = onProgress
+        listener.response.tag = self.tag
         
         let request:NSMutableURLRequest = HttpRequest.getURLRequest(self)
         _listener = listener

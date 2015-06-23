@@ -12,21 +12,25 @@ import Util
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
-
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         let str = " \n\r Hello, playground \r\n "
-        let m:Character = "\u{65}\u{301}\u{20DD}"
+        
+        let cha:String = "√⃞⃝"
+        print(cha.unicodeScalars[0])
+        
+        let m:Character = "√\u{20DE}"
         
         let tttt = str.trim()
         print(tttt)
-        print(m.hashValue)
+        print(m)
 
         let http = HttpRequest(URL: NSURL(string: "http://www.cocoachina.com")!)
         http.send { (response) -> Void in
-            
+            print("response.isCancel=\(response.isCancel)")
             print(response.headerFields)
         }
+        http.cancel()
+
         // Insert code here to initialize your application
     }
 
