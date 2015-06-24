@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3929BA6E1B3A44E200DDF4FC /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3929BA6D1B3A44E200DDF4FC /* Array+Util.swift */; };
+		3929BA711B3A450B00DDF4FC /* NSFileManager+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3929BA701B3A450B00DDF4FC /* NSFileManager+Util.swift */; };
+		3929BA731B3A4BD700DDF4FC /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3929BA721B3A4BD700DDF4FC /* File.swift */; };
+		3929BA791B3A949600DDF4FC /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3929BA781B3A949600DDF4FC /* WindowController.swift */; };
 		393AE9101B3809A200969420 /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393AE90F1B3809A200969420 /* HttpRequest.swift */; };
-		396A1F6F1B2E928F006C9011 /* Array+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A1F6E1B2E928F006C9011 /* Array+Utils.swift */; };
 		396A1F711B2E929C006C9011 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396A1F701B2E929C006C9011 /* HttpClient.swift */; };
 		3993B34D1B2AD2F400269032 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B34C1B2AD2F400269032 /* AppDelegate.swift */; };
 		3993B34F1B2AD2F400269032 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993B34E1B2AD2F400269032 /* ViewController.swift */; };
@@ -47,8 +50,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3929BA6D1B3A44E200DDF4FC /* Array+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Util.swift"; path = "Test.playground/Sources/Array+Util.swift"; sourceTree = SOURCE_ROOT; };
+		3929BA701B3A450B00DDF4FC /* NSFileManager+Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSFileManager+Util.swift"; path = "Test.playground/Sources/NSFileManager+Util.swift"; sourceTree = SOURCE_ROOT; };
+		3929BA721B3A4BD700DDF4FC /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = Test.playground/Sources/File.swift; sourceTree = SOURCE_ROOT; };
+		3929BA781B3A949600DDF4FC /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		393AE90F1B3809A200969420 /* HttpRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpRequest.swift; path = Test.playground/Sources/HttpRequest.swift; sourceTree = SOURCE_ROOT; };
-		396A1F6E1B2E928F006C9011 /* Array+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Utils.swift"; path = "Test.playground/Sources/Array+Utils.swift"; sourceTree = SOURCE_ROOT; };
 		396A1F701B2E929C006C9011 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HttpClient.swift; path = Test.playground/Sources/HttpClient.swift; sourceTree = SOURCE_ROOT; };
 		3993B3491B2AD2F400269032 /* AndroidIconManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndroidIconManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3993B34C1B2AD2F400269032 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +90,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3929BA6F1B3A44FB00DDF4FC /* io */ = {
+			isa = PBXGroup;
+			children = (
+				3929BA701B3A450B00DDF4FC /* NSFileManager+Util.swift */,
+			);
+			name = io;
+			sourceTree = "<group>";
+		};
+		3929BA761B3A905900DDF4FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		3993B3401B2AD2F400269032 = {
 			isa = PBXGroup;
 			children = (
@@ -108,9 +130,11 @@
 			children = (
 				3993B34C1B2AD2F400269032 /* AppDelegate.swift */,
 				3993B34E1B2AD2F400269032 /* ViewController.swift */,
+				3929BA781B3A949600DDF4FC /* WindowController.swift */,
 				3993B3501B2AD2F400269032 /* Assets.xcassets */,
 				3993B3521B2AD2F500269032 /* Main.storyboard */,
 				3993B3551B2AD2F500269032 /* Info.plist */,
+				3929BA761B3A905900DDF4FC /* Frameworks */,
 			);
 			path = AndroidIconManager;
 			sourceTree = "<group>";
@@ -118,6 +142,7 @@
 		3993B3611B2AD36000269032 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				3929BA6F1B3A44FB00DDF4FC /* io */,
 				3993B3811B2AD46900269032 /* value */,
 				3993B3801B2AD45100269032 /* extension */,
 				3993B37E1B2AD39000269032 /* net */,
@@ -139,7 +164,7 @@
 		3993B3801B2AD45100269032 /* extension */ = {
 			isa = PBXGroup;
 			children = (
-				396A1F6E1B2E928F006C9011 /* Array+Utils.swift */,
+				3929BA6D1B3A44E200DDF4FC /* Array+Util.swift */,
 				3993B3841B2AD4BC00269032 /* String+JSON.swift */,
 				3993B3851B2AD4BC00269032 /* String+Util.swift */,
 			);
@@ -149,6 +174,7 @@
 		3993B3811B2AD46900269032 /* value */ = {
 			isa = PBXGroup;
 			children = (
+				3929BA721B3A4BD700DDF4FC /* File.swift */,
 				3993B3821B2AD4AA00269032 /* Date.swift */,
 			);
 			name = value;
@@ -267,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3993B34F1B2AD2F400269032 /* ViewController.swift in Sources */,
+				3929BA791B3A949600DDF4FC /* WindowController.swift in Sources */,
 				3993B34D1B2AD2F400269032 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -275,12 +302,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3929BA711B3A450B00DDF4FC /* NSFileManager+Util.swift in Sources */,
 				3993B3881B2AD4BC00269032 /* String+Util.swift in Sources */,
 				3993B3871B2AD4BC00269032 /* String+JSON.swift in Sources */,
 				3993B3831B2AD4AA00269032 /* Date.swift in Sources */,
 				396A1F711B2E929C006C9011 /* HttpClient.swift in Sources */,
-				396A1F6F1B2E928F006C9011 /* Array+Utils.swift in Sources */,
+				3929BA731B3A4BD700DDF4FC /* File.swift in Sources */,
 				393AE9101B3809A200969420 /* HttpRequest.swift in Sources */,
+				3929BA6E1B3A44E200DDF4FC /* Array+Util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

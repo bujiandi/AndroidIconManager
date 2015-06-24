@@ -9,6 +9,10 @@
 import Cocoa
 
 class ViewController: NSViewController {
+    
+    @IBOutlet var path1:NSPathControl!
+    @IBOutlet var path2:NSPathControl!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

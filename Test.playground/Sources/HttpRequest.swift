@@ -28,6 +28,7 @@ public class HttpResponse {
     
     /// HTTP 状态文字描述
     public var statusString:String {
+        if statusCode < 0 { return "user cancel" }
         return NSHTTPURLResponse.localizedStringForStatusCode(statusCode)
     }
 

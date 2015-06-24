@@ -13,6 +13,7 @@ import Util
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
+/*
         let str = " \n\r Hello, playground \r\n "
         
         let cha:String = "√⃞⃝"
@@ -24,13 +25,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print(tttt)
         print(m)
 
+
         let http = HttpRequest(URL: NSURL(string: "http://www.cocoachina.com")!)
         http.send { (response) -> Void in
             print("response.isCancel=\(response.isCancel)")
             print(response.headerFields)
         }
         http.cancel()
+*/
+        print(NSHomeDirectory())
+        print(NSUserName())
+        print(NSFullUserName())
 
+        let file = File.documentDirectory
+        //file.fullPath = file.fullPath
+        let fileSize = file.fileAttributes[NSFileSize] ?? 0
+        print("attr:\(file.fileSize)  fileSize:\(fileSize)")
+        for subFile in file.subFileList {
+            print(subFile)
+        }
+        
+
+        //let http = HttpRequest(URL: NSURL(string: "http://app.cctykw.com:8080/TyData/176/data/176.zip")!)
+        
+        
+        
+        //http.downloadTo(<#T##localPath: String##String#>, onProgress: <#T##OnHttpRequestDownload##OnHttpRequestDownload##(HttpDownload) -> Void#>)
         // Insert code here to initialize your application
     }
 
