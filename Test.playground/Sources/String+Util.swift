@@ -88,10 +88,10 @@ extension String {
     }
     
     // MARK: - 字符串拆分
-    public func separatedByString(separator: String) -> [String] {
+    public func splitByString(separator: String) -> [String] {
         return self.componentsSeparatedByString(separator)
     }
-    public func separatedByCharacters(separators: String) -> [String] {
+    public func splitByCharacters(separators: String) -> [String] {
         return self.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: separators))
     }
     

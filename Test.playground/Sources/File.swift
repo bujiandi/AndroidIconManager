@@ -1,6 +1,8 @@
 import Foundation
 
-public struct File : CustomStringConvertible, CustomDebugStringConvertible {
+public func ==(lhs:File, rhs:File) -> Bool { return lhs.fullPath == rhs.fullPath }
+
+public struct File : Equatable, CustomStringConvertible, CustomDebugStringConvertible {
     
     // MARK: - CustomStringConvertible
     public var description: String { return fullPath.stringByDeletingPathPrefix }
@@ -41,6 +43,22 @@ public struct File : CustomStringConvertible, CustomDebugStringConvertible {
         return size?.unsignedLongLongValue ?? 0
     }
     
+    // MARK: 判断目录中存在指定 1-n个文件名
+    public func existsFileName(var names:[String]) -> Bool {
+        if names.count == 0 { return false }
+        let fileManager:NSFileManager = NSFileManager.defaultManager()
+        do {
+            let fileNames:[String] = try fileManager.contentsOfDirectoryAtPath(fullPath)
+            for fileName in fileNames {
+                if names.count == 0 { break }
+                let index = names.indexOf() { $0 == fileName }
+                if index != NSNotFound { names.removeAtIndex(index) }
+            }
+            return names.count == 0
+        } catch {}
+        return false
+    }
+    
     // MARK: 文件名
     public var fileName:String { return fullPath.stringByDeletingPathPrefix }
     
@@ -62,10 +80,15 @@ public struct File : CustomStringConvertible, CustomDebugStringConvertible {
             let fileNames:[String] = try fileManager.contentsOfDirectoryAtPath(fullPath)
             for fileName in fileNames {
                 files.append(File(rootPath: fullPath, fileName: fileName))
+                fullPath.stringByDeletingPathExtension
             }
         } catch {}
         return files
     }
+    public var fileExtension:String {
+        return fileName.componentsSeparatedByString(".").last ?? ""
+    }
+    
     
     // MARK: - 系统默认文件路径
     public static func systemDirectory(pathType:NSSearchPathDirectory, domainMask:NSSearchPathDomainMask = .UserDomainMask) -> File {

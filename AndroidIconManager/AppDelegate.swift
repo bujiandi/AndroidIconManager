@@ -33,17 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         http.cancel()
 */
-        print(NSHomeDirectory())
-        print(NSUserName())
-        print(NSFullUserName())
-
-        let file = File.documentDirectory
-        //file.fullPath = file.fullPath
-        let fileSize = file.fileAttributes[NSFileSize] ?? 0
-        print("attr:\(file.fileSize)  fileSize:\(fileSize)")
-        for subFile in file.subFileList {
-            print(subFile)
-        }
+        
         
 
         //let http = HttpRequest(URL: NSURL(string: "http://app.cctykw.com:8080/TyData/176/data/176.zip")!)
