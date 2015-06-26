@@ -29,8 +29,8 @@ class WindowController: NSWindowController {
         splitController!.splitView.setPosition(100, ofDividerAtIndex: 0)
         sideController = splitController!.splitViewItems[0].viewController as! SideController
         //sideController.loadAndroidProgectPath(pathControl.URL?.path ?? "")
-
-    
+        
+        loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamReader/reader")
     }
     
     
@@ -65,24 +65,25 @@ class WindowController: NSWindowController {
             File(rootFile: resFile, fileName: "drawable-ldpi"),
             File(rootFile: resFile, fileName: "drawable-mdpi"),
             File(rootFile: resFile, fileName: "drawable-hdpi"),
-            File(rootFile: resFile, fileName: "drawable-xdpi"),
-            File(rootFile: resFile, fileName: "drawable-xxdpi"),
-            File(rootFile: resFile, fileName: "drawable-xxxdpi")
+            File(rootFile: resFile, fileName: "drawable-xhdpi"),
+            File(rootFile: resFile, fileName: "drawable-xxhdpi"),
+            File(rootFile: resFile, fileName: "drawable-xxxhdpi")
         ]
         ImageDataSource.shared.mipmapList = [
             File(rootFile: resFile, fileName: "mipmap"),
             File(rootFile: resFile, fileName: "mipmap-ldpi"),
             File(rootFile: resFile, fileName: "mipmap-mdpi"),
             File(rootFile: resFile, fileName: "mipmap-hdpi"),
-            File(rootFile: resFile, fileName: "mipmap-xdpi"),
-            File(rootFile: resFile, fileName: "mipmap-xxdpi"),
-            File(rootFile: resFile, fileName: "mipmap-xxxdpi")
+            File(rootFile: resFile, fileName: "mipmap-xhdpi"),
+            File(rootFile: resFile, fileName: "mipmap-xxhdpi"),
+            File(rootFile: resFile, fileName: "mipmap-xxxhdpi")
         ]
         
         let fileExtensions = ["png","jpg","jpeg"]
         
         ImageDataSource.shared.drawables = [:]
         for drawable in ImageDataSource.shared.drawableList where drawable.isExists {
+            //print(drawable.fileName)
             for file in drawable.subFileList where fileExtensions.contains(file.fileExtension) {
                 let name = file.fileName
                 let item = ImageItem(file, root: drawable)
@@ -105,7 +106,7 @@ class WindowController: NSWindowController {
                 ImageDataSource.shared.mipmaps[name]!.append(item)
             }
         }
-
+        //print(ImageDataSource.shared.drawables)
         sideController.reloadData()
     }
 
@@ -126,7 +127,7 @@ class ImageDataSource {
     
 }
 
-class ImageItem {
+class ImageItem : CustomStringConvertible , CustomDebugStringConvertible {
     var file:File
     var root:File
     init (_ file:File, root:File) {
@@ -134,6 +135,10 @@ class ImageItem {
         self.root = root
     }
     var name:String { return file.fileName }
+    
+    var description: String { return file.fileName + "(\(root.imageRootTypeName))" }
+    var debugDescription: String { return description }
+
 }
 
 extension File {

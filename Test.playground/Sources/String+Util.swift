@@ -7,8 +7,20 @@ import Foundation
 
 extension String {
     
+    
+//    // create a static method to get a swift class for a string name
+//    public class func swiftClassFromString(className: String) -> AnyClass! {
+//        // get the project name
+//        if  var appName: String = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String {
+//            // generate the full name of your class (take a look into your "YourProject-swift.h" file)
+//            let classStringName = "_TtC\(appName.utf16count)\(appName)\(className.length)\(className)"
+//            // return the class!
+//            return NSClassFromString(classStringName)
+//        }
+//        return nil
+//    }
     // MARK: - 取类型名
-    static func typeNameFromClass(aClass:AnyClass) -> String {
+    public static func typeNameFromClass(aClass:AnyClass) -> String {
         let name = NSStringFromClass(aClass)
         let demangleName = _stdlib_demangleName(name)
         return demangleName.componentsSeparatedByString(".").last!

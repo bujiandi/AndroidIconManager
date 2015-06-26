@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>862AC18C-1C32-428B-B07C-DA355755F51F</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>AndroidIconManager</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>
 		<string>https://github.com/bujiandi/AndroidIconManager.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>AndroidIconManager.xcodeproj/project.xcworkspace</string>
+	<string>AndroidIconManager.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>

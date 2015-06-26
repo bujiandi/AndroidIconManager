@@ -9,7 +9,7 @@
 import Cocoa
 import Util
 
-class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate, NSTextFieldDelegate {
 
     var drawables:[[File]] = []
     var mipmaps:[[File]] = []
@@ -21,10 +21,6 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         self.parentViewController
-    }
-    
-    func showSuccess() {
-        print("success Side")
     }
     
     
@@ -42,8 +38,6 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     
     // 返回的路径用于重置 路径选择进行矫正
     func loadAndroidProgectPath(androidPath:String) -> String {
-        
-        
         
         outlineView.sizeLastColumnToFit()
         outlineView.reloadData()
@@ -63,19 +57,23 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
         if let headerName = item as? String {
             let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
+            //print(dict.count)
             return dict.count
         }
+        //print(headers.count)
         return headers.count
     }
     func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
         if let headerName = item as? String {
             let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
-            return dict.values.array[index]
+            let index = advance(dict.startIndex, index)
+            //print(dict[index].0)
+            return dict[index].0
         }
-        return headers[index]
+        return headers[index] as NSString
     }
     func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
-        return item is String
+        return outlineView.parentForItem(item) == nil
     }
     
     
@@ -86,16 +84,75 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
 //    }
     
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        if let headerName = item as? String {
+        guard let key = item as? String else {
+            let row = outlineView.rowForItem(item)
             let cell = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
-            cell.textField?.stringValue = headerName
+            cell.textField?.stringValue = headers[row > 0 ? 1 : 0]
             return cell
         }
-        let datas = item as! [ImageItem]
+        guard let headerName = outlineView.parentForItem(item) as? String else {
+            let cell = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
+            cell.textField?.stringValue = key
+            return cell
+        }
+        
+        let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
+        guard let datas = dict[key] else {
+            return nil
+        }
+        
+        //print("\(datas[0].name) § \(datas.count)\u{20DD}")
         let path = datas[0].file.fullPath
         let cell = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! NSTableCellView
-        cell.textField?.stringValue = datas[0].name
+        cell.textField?.stringValue = "\(datas[0].name) § \(datas.count)\u{20DD}"
+        cell.textField?.delegate = self
         cell.imageView?.image = NSImage(contentsOfFile: path)
         return cell
     }
+    
+    func outlineView(outlineView: NSOutlineView, shouldEditTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> Bool {
+        return outlineView.parentForItem(item) != nil
+    }
+    
+    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+        return outlineView.parentForItem(item) == nil
+    }
+    
+//    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+//        return outlineView.parentForItem(item) != nil
+//    }
+    
+    // 编辑
+    func outlineView(outlineView: NSOutlineView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) {
+        print("object:\(object) item:\(item)")
+    }
+    
+    // MARK: - NSTextFieldDelegate
+    func control(control: NSControl, textShouldBeginEditing fieldEditor: NSText) -> Bool {
+        fieldEditor.selectAll(nil)
+        print("begin:\(fieldEditor.string) ")
+
+        return true
+    }
+    
+    func control(control: NSControl, textShouldEndEditing fieldEditor: NSText) -> Bool {
+
+        print(fieldEditor.string)
+        if fieldEditor.string!.length < 4 {
+            return false
+        }
+        return true
+    }
+    
+    // 当输入回车结束编辑 返回是否取消事件
+    func control(control: NSControl, textView: NSTextView, doCommandBySelector commandSelector: Selector) -> Bool {
+        
+        if commandSelector.description == "insertNewline:" {
+            textView.window?.makeFirstResponder(nil)
+            return true
+        }
+
+        return false
+    }
+
 }
