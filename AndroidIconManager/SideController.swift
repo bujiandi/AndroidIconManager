@@ -15,7 +15,8 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     var mipmaps:[[File]] = []
     var headers:[String] = ["drawable","mipmap"]
 
-    
+    weak var imageController: ImageController!
+
     @IBOutlet weak var outlineView: NSOutlineView!
     
     override func viewDidLoad() {
@@ -104,7 +105,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         //print("\(datas[0].name) § \(datas.count)\u{20DD}")
         let path = datas[0].file.fullPath
         let cell = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! NSTableCellView
-        cell.textField?.stringValue = "\(datas[0].name) § \(datas.count)\u{20DD}"
+        cell.textField?.stringValue = key //"\(datas[0].name) § \(datas.count)\u{20DD}"
         cell.textField?.delegate = self
         cell.imageView?.image = NSImage(contentsOfFile: path)
         return cell
@@ -122,10 +123,27 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
 //        return outlineView.parentForItem(item) != nil
 //    }
     
-    // 编辑
-    func outlineView(outlineView: NSOutlineView, setObjectValue object: AnyObject?, forTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) {
-        print("object:\(object) item:\(item)")
+    // MARK: - Selected
+    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
+        return outlineView.parentForItem(item) != nil
     }
+    
+    func outlineViewSelectionDidChange(notification: NSNotification) {
+        let outlineView = notification.object as! NSOutlineView
+        outlineViewSelectionsDidChange(outlineView)
+    }
+    func outlineViewSelectionsDidChange(outlineView:NSOutlineView) {
+        
+        var keys:[String] = []
+        for row in outlineView.selectedRowIndexes {
+            if let key = outlineView.itemAtRow(row) as? String {
+                keys.append(key)
+            }
+        }
+        imageController.reloadData(keys)
+        print("keys:\(keys) set:\(outlineView.selectedRowIndexes)")
+    }
+    
     
     // MARK: - NSTextFieldDelegate
     func control(control: NSControl, textShouldBeginEditing fieldEditor: NSText) -> Bool {

@@ -14,6 +14,7 @@ class WindowController: NSWindowController {
     @IBOutlet weak var pathControl: NSPathControl!
     
     weak var sideController: SideController!
+    weak var imageController: ImageController!
     
     @IBAction func pathChange(sender: NSPathControl) {
         print(sender.URL?.path)
@@ -28,6 +29,10 @@ class WindowController: NSWindowController {
         let splitController = self.contentViewController as? NSSplitViewController
         splitController!.splitView.setPosition(100, ofDividerAtIndex: 0)
         sideController = splitController!.splitViewItems[0].viewController as! SideController
+        imageController = splitController!.splitViewItems[1].viewController as! ImageController
+        
+        sideController.imageController = imageController
+        imageController.sideController = sideController
         //sideController.loadAndroidProgectPath(pathControl.URL?.path ?? "")
         
         loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamReader/reader")
@@ -85,7 +90,7 @@ class WindowController: NSWindowController {
         for drawable in ImageDataSource.shared.drawableList where drawable.isExists {
             //print(drawable.fileName)
             for file in drawable.subFileList where fileExtensions.contains(file.fileExtension) {
-                let name = file.fileName
+                let name = file.fileName.stringByDeletingPathExtension
                 let item = ImageItem(file, root: drawable)
 
                 if ImageDataSource.shared.drawables[name] == nil {
@@ -98,7 +103,7 @@ class WindowController: NSWindowController {
         ImageDataSource.shared.mipmaps = [:]
         for mipmap in ImageDataSource.shared.mipmapList where mipmap.isExists {
             for file in mipmap.subFileList where fileExtensions.contains(file.fileExtension) {
-                let name = file.fileName
+                let name = file.fileName.stringByDeletingPathExtension
                 let item = ImageItem(file, root: mipmap)
                 if ImageDataSource.shared.mipmaps[name] == nil {
                     ImageDataSource.shared.mipmaps[name] = []
