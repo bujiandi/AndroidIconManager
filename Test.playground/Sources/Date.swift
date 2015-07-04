@@ -9,7 +9,7 @@
 
 import Foundation
 
-public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Reflectable, Hashable, Equatable, Comparable ,ForwardIndexType {
+public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Hashable, Equatable, Comparable ,ForwardIndexType {
     var timeInterval:NSTimeInterval = 0
     
     public init() { self.timeInterval = NSDate().timeIntervalSince1970 }
@@ -206,6 +206,10 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
     public func getMirror() -> MirrorType {
         return reflect(self)
     }
+
+//    public func getMirror() -> MirrorType {
+//        return reflect(self)
+//    }
     // MARK: - 可哈希(Hashable)
     public var hashValue: Int { return timeInterval.hashValue }
     
@@ -213,6 +217,13 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Refl
     public var object: NSDate { return NSDate(timeIntervalSince1970: timeInterval) }
     public init(_ v:NSDate) { self.timeInterval = v.timeIntervalSince1970 }
 }
+
+//// MARK: - 可反射(Reflectable)
+//extension Date : _Reflectable {
+//    public func getMirror() -> MirrorType {
+//        return reflect(self)
+//    }
+//}
 
 // MARK: - 可以用 == 或 != 对比
 public func ==(lhs: Date, rhs: Date) -> Bool {

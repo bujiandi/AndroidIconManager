@@ -15,7 +15,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     var mipmaps:[[File]] = []
     var headers:[String] = ["drawable","mipmap"]
 
-    weak var imageController: ImageController!
+    weak var viewController: ViewController!
 
     @IBOutlet weak var outlineView: NSOutlineView!
     
@@ -56,27 +56,29 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     
     
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
-        if let headerName = item as? String {
-            let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
-            //print(dict.count)
+        if item == nil {
+            return headers.count
+        } else if outlineView.parentForItem(item) == nil {
+            let dict = outlineView.rowForItem(item) > 0 ? dataSource.mipmaps : dataSource.drawables
             return dict.count
         }
-        //print(headers.count)
-        return headers.count
+        return 0
     }
     func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
-        if let headerName = item as? String {
-            let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
-            let index = advance(dict.startIndex, index)
-            //print(dict[index].0)
-            return dict[index].0
+        if item == nil {
+            return headers[index]
         }
-        return headers[index] as NSString
+        let dict = outlineView.rowForItem(item) > 0 ? dataSource.mipmaps : dataSource.drawables
+        let index = advance(dict.startIndex, index)
+        return dict[index].0
     }
     func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
         return outlineView.parentForItem(item) == nil
     }
     
+    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
+        return outlineView.parentForItem(item) == nil
+    }
     
 //    /* View Based OutlineView: This method is not applicable.
 //    */
@@ -85,22 +87,17 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
 //    }
     
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        guard let key = item as? String else {
+        let parentItem = outlineView.parentForItem(item)
+        if parentItem == nil {
             let row = outlineView.rowForItem(item)
             let cell = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
             cell.textField?.stringValue = headers[row > 0 ? 1 : 0]
             return cell
         }
-        guard let headerName = outlineView.parentForItem(item) as? String else {
-            let cell = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
-            cell.textField?.stringValue = key
-            return cell
-        }
         
-        let dict = headerName == "drawable" ? dataSource.drawables : dataSource.mipmaps
-        guard let datas = dict[key] else {
-            return nil
-        }
+        let dict = outlineView.rowForItem(parentItem) > 0 ? dataSource.mipmaps : dataSource.drawables
+        let key = item as! String
+        let datas = dict[key]!
         
         //print("\(datas[0].name) § \(datas.count)\u{20DD}")
         let path = datas[0].file.fullPath
@@ -113,10 +110,6 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     
     func outlineView(outlineView: NSOutlineView, shouldEditTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> Bool {
         return outlineView.parentForItem(item) != nil
-    }
-    
-    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
-        return outlineView.parentForItem(item) == nil
     }
     
 //    func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool {
@@ -140,7 +133,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
                 keys.append(key)
             }
         }
-        imageController.reloadData(keys)
+        viewController.reloadData(keys)
         print("keys:\(keys) set:\(outlineView.selectedRowIndexes)")
     }
     

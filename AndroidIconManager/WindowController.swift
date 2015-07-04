@@ -14,7 +14,7 @@ class WindowController: NSWindowController {
     @IBOutlet weak var pathControl: NSPathControl!
     
     weak var sideController: SideController!
-    weak var imageController: ImageController!
+    weak var viewController: ViewController!
     
     @IBAction func pathChange(sender: NSPathControl) {
         print(sender.URL?.path)
@@ -29,10 +29,10 @@ class WindowController: NSWindowController {
         let splitController = self.contentViewController as? NSSplitViewController
         splitController!.splitView.setPosition(100, ofDividerAtIndex: 0)
         sideController = splitController!.splitViewItems[0].viewController as! SideController
-        imageController = splitController!.splitViewItems[1].viewController as! ImageController
+        viewController = splitController!.splitViewItems[1].viewController as! ViewController
         
-        sideController.imageController = imageController
-        imageController.sideController = sideController
+        sideController.viewController = viewController
+        viewController.sideController = sideController
         //sideController.loadAndroidProgectPath(pathControl.URL?.path ?? "")
         
         loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamReader/reader")
