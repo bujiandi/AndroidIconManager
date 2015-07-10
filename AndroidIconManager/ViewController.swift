@@ -8,11 +8,11 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDelegate {
+class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
     weak var sideController: SideController!
 
-    @IBOutlet weak var outlineView: NSOutlineView!
+    @IBOutlet weak var tableView: NSTableView!
     
     var dataSource:ImageDataSource { return ImageDataSource.shared }
 
@@ -22,14 +22,7 @@ class ViewController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         
         selectionKeys = keys
         
-        //outlineView.sizeLastColumnToFit()
-        outlineView.reloadItem(nil, reloadChildren: true)
-        //outlineView.floatsGroupRows = false
-        
-//        NSAnimationContext.beginGrouping()
-//        NSAnimationContext.currentContext().duration = 0
-//        outlineView.expandItem(nil, expandChildren: false)
-//        NSAnimationContext.endGrouping()
+        tableView.reloadData()
     }
 
     override func viewDidLoad() {

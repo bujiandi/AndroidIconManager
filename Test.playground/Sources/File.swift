@@ -89,7 +89,6 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
         return fileName.componentsSeparatedByString(".").last ?? ""
     }
     
-    
     // MARK: - 系统默认文件路径
     public static func systemDirectory(pathType:NSSearchPathDirectory, domainMask:NSSearchPathDomainMask = .UserDomainMask) -> File {
         let path = NSSearchPathForDirectoriesInDomains(pathType, domainMask, true)[0]
