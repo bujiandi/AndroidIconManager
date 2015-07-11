@@ -9,7 +9,25 @@
 import Cocoa
 import Util
 
-class WindowController: NSWindowController {
+var mainWindowSplitViewPosition:CGFloat = 250
+
+extension NSSplitViewController {
+    
+    
+    public override func viewDidAppear() {
+        super.viewDidAppear()
+        
+        splitView.setPosition(mainWindowSplitViewPosition, ofDividerAtIndex: 0)
+    }
+}
+
+class WindowController: NSWindowController, NSSplitViewDelegate {
+    
+    func splitView(splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        mainWindowSplitViewPosition = proposedPosition < 250 ? 250 : proposedPosition
+        return mainWindowSplitViewPosition
+    }
+    
     
     @IBOutlet weak var pathControl: NSPathControl!
     
@@ -26,10 +44,16 @@ class WindowController: NSWindowController {
     override func windowDidLoad() {
         super.windowDidLoad()
         
-        let splitController = self.contentViewController as? NSSplitViewController
-        splitController!.splitView.setPosition(100, ofDividerAtIndex: 0)
-        sideController = splitController!.splitViewItems[0].viewController as! SideController
-        viewController = splitController!.splitViewItems[1].viewController as! ViewController
+        window?.setFrame(NSMakeRect(1000, 500, 900, 480), display: false)
+        let splitController = self.contentViewController! as! NSSplitViewController
+        
+        splitController.splitView.delegate = self
+        // 设置左侧 item 不随缩放变化
+        splitController.splitView.setHoldingPriority(300, forSubviewAtIndex: 0)
+        
+
+        sideController = splitController.splitViewItems[0].viewController as! SideController
+        viewController = splitController.splitViewItems[1].viewController as! ViewController
         
         sideController.viewController = viewController
         viewController.sideController = sideController
@@ -66,22 +90,22 @@ class WindowController: NSWindowController {
         let resFile = File(rootFile: rootFile, fileName: "src/main/res")
         
         ImageDataSource.shared.drawableList = [
-            File(rootFile: resFile, fileName: "drawable"),
-            File(rootFile: resFile, fileName: "drawable-ldpi"),
-            File(rootFile: resFile, fileName: "drawable-mdpi"),
-            File(rootFile: resFile, fileName: "drawable-hdpi"),
-            File(rootFile: resFile, fileName: "drawable-xhdpi"),
+            File(rootFile: resFile, fileName: "drawable-xxxhdpi"),
             File(rootFile: resFile, fileName: "drawable-xxhdpi"),
-            File(rootFile: resFile, fileName: "drawable-xxxhdpi")
+            File(rootFile: resFile, fileName: "drawable-xhdpi"),
+            File(rootFile: resFile, fileName: "drawable-hdpi"),
+            File(rootFile: resFile, fileName: "drawable-mdpi"),
+            File(rootFile: resFile, fileName: "drawable-ldpi"),
+            File(rootFile: resFile, fileName: "drawable")
         ]
         ImageDataSource.shared.mipmapList = [
-            File(rootFile: resFile, fileName: "mipmap"),
-            File(rootFile: resFile, fileName: "mipmap-ldpi"),
-            File(rootFile: resFile, fileName: "mipmap-mdpi"),
-            File(rootFile: resFile, fileName: "mipmap-hdpi"),
-            File(rootFile: resFile, fileName: "mipmap-xhdpi"),
+            File(rootFile: resFile, fileName: "mipmap-xxxhdpi"),
             File(rootFile: resFile, fileName: "mipmap-xxhdpi"),
-            File(rootFile: resFile, fileName: "mipmap-xxxhdpi")
+            File(rootFile: resFile, fileName: "mipmap-xhdpi"),
+            File(rootFile: resFile, fileName: "mipmap-hdpi"),
+            File(rootFile: resFile, fileName: "mipmap-mdpi"),
+            File(rootFile: resFile, fileName: "mipmap-ldpi"),
+            File(rootFile: resFile, fileName: "mipmap")
         ]
         
         let fileExtensions = ["png","jpg","jpeg"]
@@ -133,13 +157,21 @@ class ImageDataSource {
 }
 
 class ImageItem : CustomStringConvertible , CustomDebugStringConvertible {
-    var file:File
+
     var root:File
+    var file:File {
+        didSet { _image = nil }
+    }
     init (_ file:File, root:File) {
         self.file = file
         self.root = root
     }
     var name:String { return file.fileName }
+    private var _image:NSImage?
+    var image:NSImage {
+        if _image == nil { _image = NSImage(contentsOfFile: file.fullPath) }
+        return _image!
+    }
     
     var description: String { return file.fileName + "(\(root.imageRootTypeName))" }
     var debugDescription: String { return description }

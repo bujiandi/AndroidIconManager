@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Util
 
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
     
@@ -16,43 +17,81 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     
     var dataSource:ImageDataSource { return ImageDataSource.shared }
 
-    var selectionKeys:[String] = []
+    var imageItems:[[ImageItem]] = []
     
-    func reloadData(keys:[String]) {
+    func reloadData(imageItems:[[ImageItem]]) {
         
-        selectionKeys = keys
+        self.imageItems = imageItems
         
         tableView.reloadData()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
+        
+        // 设置从Finder 拖入的内容是 文件URL
+        tableView.registerForDraggedTypes([NSFilenamesPboardType])
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
-        print(selectionKeys.count)
-        if item != nil { return 0 }
-        return selectionKeys.count
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int {
+        return imageItems.count;
     }
     
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject {
-        return selectionKeys[index]
+    /* This method is required for the "Cell Based" TableView, and is optional for the "View Based" TableView. If implemented in the latter case, the value will be set to the view at a given row/column if the view responds to -setObjectValue: (such as NSControl and NSTableCellView).
+    */
+    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
+        return imageItems[row][0].name
     }
     
-//    func outlineView(outlineView: NSOutlineView, objectValueForTableColumn tableColumn: NSTableColumn?, byItem item: AnyObject?) -> AnyObject? {
-//        print(item)
-//        return nil
-//    }
-    
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool {
-        return false
+    func tableView(tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        let maxHeightImage = imageItems[row].maxElement {
+            $0.image.size.height < $1.image.size.height
+        }
+        return (maxHeightImage?.image.size.height ?? 40) + 60
     }
     
-    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        let cell = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! ImagesCellView
-        cell.textField?.stringValue = item as? String ?? ""
+    
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        
+        let cell = tableView.makeViewWithIdentifier("ImageCell", owner: self) as! ImagesCellView;
+        
+        cell.images = imageItems[row]
+        cell.textField?.stringValue = cell.images[0].name
+
         return cell
     }
+    
+    // MARK: - Drag and Drop
+    func tableView(tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableViewDropOperation) -> NSDragOperation {
+        return [NSDragOperation.Every]
+    }
+    
+    func tableView(tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableViewDropOperation) -> Bool {
+        let pasteboard = info.draggingPasteboard()
+        guard pasteboard.types?.contains(NSFilenamesPboardType) ?? false else {
+            return false
+        }
+        guard let paths = pasteboard.propertyListForType(NSFilenamesPboardType) as? [String] else {
+            return false
+        }
+        for path in paths {
+            let file = File(fullPath: path)
+            let array = file.fileName.stringByDeletingPathExtension.splitByString("@")
+            let name = array.first!
+            if array.count == 1 {
+                print(name)
+            } else if array.count > 1 {
+                print(array.last!)
+            }
+        }
+        return true
+    }
+/*
+    // 将内容拖到别的地方
+    func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
+        return false
+    }
+*/
+    
     
 }
