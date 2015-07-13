@@ -36,14 +36,15 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
     
     @IBAction func pathChange(sender: NSPathControl) {
         print(sender.URL?.path)
-        
+        let tool:NSToolbar
+        tool
         loadAndroidProjectPath(sender.URL?.path ?? "")
         //sideController.loadAndroidProgectPath(sender.URL?.path ?? "")
     }
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        
+        //NSWorkspace
         window?.setFrame(NSMakeRect(1000, 500, 900, 480), display: false)
         let splitController = self.contentViewController! as! NSSplitViewController
         

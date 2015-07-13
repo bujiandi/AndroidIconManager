@@ -74,10 +74,16 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         guard let paths = pasteboard.propertyListForType(NSFilenamesPboardType) as? [String] else {
             return false
         }
+        
         for path in paths {
             let file = File(fullPath: path)
+            
+            var success:Int = 0
+            NSWorkspace.sharedWorkspace().performFileOperation(NSWorkspaceCopyOperation, source: path.stringByDeletingLastPathComponent, destination: "/Users/bujiandi/Documents/ext", files: [file.fileName], tag: &success)
+            
             let array = file.fileName.stringByDeletingPathExtension.splitByString("@")
             let name = array.first!
+            
             if array.count == 1 {
                 print(name)
             } else if array.count > 1 {
