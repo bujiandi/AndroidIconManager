@@ -59,6 +59,10 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
         return false
     }
     
+    public func renameToPath(path:String) {
+        NSFileManager.defaultManager().copy
+    }
+    
     // MARK: 文件名
     public var fileName:String { return fullPath.stringByDeletingPathPrefix }
     

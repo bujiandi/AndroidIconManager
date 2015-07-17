@@ -78,17 +78,17 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         for path in paths {
             let file = File(fullPath: path)
             
-            var success:Int = 0
-            NSWorkspace.sharedWorkspace().performFileOperation(NSWorkspaceCopyOperation, source: path.stringByDeletingLastPathComponent, destination: "/Users/bujiandi/Documents/ext", files: [file.fileName], tag: &success)
+            //var success:Int = 0
+            //NSWorkspace.sharedWorkspace().performFileOperation(NSWorkspaceCopyOperation, source: path.stringByDeletingLastPathComponent, destination: "/Users/bujiandi/Documents/ext", files: [file.fileName], tag: &success)
             
             let array = file.fileName.stringByDeletingPathExtension.splitByString("@")
-            let name = array.first!
             
-            if array.count == 1 {
-                print(name)
-            } else if array.count > 1 {
-                print(array.last!)
-            }
+            let name = array.first!
+            let multiple:Float = array.count <= 1 ? 1.0 : (array.last! as NSString).floatValue
+            
+            
+            print(multiple)
+
         }
         return true
     }
