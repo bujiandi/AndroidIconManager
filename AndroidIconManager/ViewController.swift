@@ -75,21 +75,69 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             return false
         }
         
+        var names:Set<String> = Set<String>()
+        //keys.insert(<#T##member: Element##Element#>)
+        //var names:[String] = []
         for path in paths {
             let file = File(fullPath: path)
             
             //var success:Int = 0
             //NSWorkspace.sharedWorkspace().performFileOperation(NSWorkspaceCopyOperation, source: path.stringByDeletingLastPathComponent, destination: "/Users/bujiandi/Documents/ext", files: [file.fileName], tag: &success)
+        
+            let fileName = file.fileName
+            let fileExtension = file.getFileExtension([".9.png"])
             
-            let array = file.fileName.stringByDeletingPathExtension.splitByString("@")
+            
+            let array = fileName.stringByDeletingPathExtension.splitByString("@")
             
             let name = array.first!
             let multiple:Float = array.count <= 1 ? 1.0 : (array.last! as NSString).floatValue
+            var rootPath:String = ""
+            switch multiple {
+            case 1.0:
+                rootPath = ImageDataSource.shared.drawableList[4].fullPath  //drawable-mdpi
+            case 1.5:
+                rootPath = ImageDataSource.shared.drawableList[3].fullPath  //drawable-hdpi
+            case 2.0:
+                rootPath = ImageDataSource.shared.drawableList[2].fullPath  //drawable-xhdpi
+            case 3.0:
+                rootPath = ImageDataSource.shared.drawableList[1].fullPath  //drawable-xxhdpi
+            case 4.0:
+                rootPath = ImageDataSource.shared.drawableList[0].fullPath  //drawable-xxxhdpi
+            default:
+                rootPath = ImageDataSource.shared.drawableList[6].fullPath  //drawable
+            }
+            let root = File(fullPath: rootPath)
+            let newFile = File(rootFile: root, fileName: "\(name).\(fileExtension)")
             
+            file.copyToPath(newFile.fullPath)
             
-            print(multiple)
+            let item = ImageItem(newFile, root:root)
+            
+            if ImageDataSource.shared.drawables[name] == nil {
+                ImageDataSource.shared.drawables[name] = []
+            }
+            ImageDataSource.shared.drawables[name]!.insert(item, atIndex: 0)
+            
+            //names.append(name)
+            names.insert(name)
+            print("name:\(name) multiple:\(multiple) fileExtension:\(fileExtension)")
 
         }
+        
+        let oldCount = imageItems.count
+        for name in names {
+            imageItems.append(ImageDataSource.shared.drawables[name]!)
+        }
+        let rows:NSIndexSet = NSIndexSet(indexesInRange: NSMakeRange(oldCount, imageItems.count - oldCount))
+        
+        tableView.insertRowsAtIndexes(rows, withAnimation: NSTableViewAnimationOptions.EffectGap)
+        tableView.scrollRowToVisible(rows.lastIndex)
+        
+        //sideController.outlineView.selectRowIndexes(<#T##indexes: NSIndexSet##NSIndexSet#>, byExtendingSelection: <#T##Bool#>)
+        
+        sideController.reloadDataWithKeys(names)
+        
         return true
     }
 /*

@@ -32,9 +32,20 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         outlineView.floatsGroupRows = false
         
         NSAnimationContext.beginGrouping()
-        NSAnimationContext.currentContext().duration = 0
+        NSAnimationContext.currentContext().duration = 300
         outlineView.expandItem(nil, expandChildren: true)
         NSAnimationContext.endGrouping()
+    }
+    
+    func reloadDataWithKeys(names:Set<String>) {
+        reloadData()
+        let rows:NSMutableIndexSet = NSMutableIndexSet()
+        for name in names {
+            rows.addIndex(outlineView.rowForItem(name))
+        }
+        rows.addIndexes(outlineView.selectedRowIndexes)
+        outlineView.selectRowIndexes(rows, byExtendingSelection: false)
+        
     }
     
     var dataSource:ImageDataSource { return ImageDataSource.shared }

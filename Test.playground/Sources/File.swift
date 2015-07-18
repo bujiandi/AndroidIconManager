@@ -59,9 +59,59 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
         return false
     }
     
-    public func renameToPath(path:String) {
-        NSFileManager.defaultManager().copy
+    // MARK: 创建所有不存在的父路径
+    public func makeParentDirs() -> Bool {
+        let fileManager = NSFileManager.defaultManager()
+        let parentPath = fullPath.stringByDeletingLastPathComponent
+        var isDirectory:ObjCBool = false
+        let isExists = fileManager.fileExistsAtPath(parentPath, isDirectory: &isDirectory)
+        if !(isExists && isDirectory.boolValue) {
+            do {
+                try fileManager.createDirectoryAtPath(parentPath, withIntermediateDirectories: true, attributes: nil)
+            } catch let error {
+                print(error)
+                return false
+            }
+        }
+        return true
     }
+    
+    // MARK: 拷贝文件到指定路径 自动创建所有父路径
+    public func copyToPath(path:String) -> Bool {
+        makeParentDirs()
+        do {
+            try NSFileManager.defaultManager().copyItemAtPath(fullPath, toPath: path)
+        } catch let error {
+            print(error)
+            return false
+        }
+        return true
+    }
+    
+    // MARK: 移动文件到指定路径 自动创建所有父路径
+    public func moveToPath(path:String) -> Bool {
+        makeParentDirs()
+        do {
+            try NSFileManager.defaultManager().moveItemAtPath(fullPath, toPath: path)
+        } catch let error {
+            print(error)
+            return false
+        }
+        return true
+    }
+    
+    // MARK: 文件重命名
+    public mutating func rename(newFileName:String) -> Bool {
+        let parent = fullPath.stringByDeletingLastPathComponent
+        let newPath = parent.stringByAppendingPathComponent(newFileName)
+        let success = moveToPath(newPath)
+        if success { self.fullPath = newPath }
+        return success
+    }
+
+    
+    // MARK: 父目录
+    public var parentFile:File { return File(fullPath: fullPath.stringByDeletingLastPathComponent) }
     
     // MARK: 文件名
     public var fileName:String { return fullPath.stringByDeletingPathPrefix }
@@ -91,6 +141,12 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
     }
     public var fileExtension:String {
         return fileName.componentsSeparatedByString(".").last ?? ""
+    }
+    public func getFileExtension(exceptionFileExtensions:[String]) -> String {
+        for exceptionFileExtension in exceptionFileExtensions where fileName.hasSuffix(exceptionFileExtension) {
+            return exceptionFileExtension.hasPrefix(".") ? exceptionFileExtension.substringFromIndex(1) : exceptionFileExtension
+        }
+        return fileExtension
     }
     
     // MARK: - 系统默认文件路径
