@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8152.3" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="8164.2" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8152.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="8164.2"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -53,15 +53,6 @@
                                         </menuItem>
                                     </items>
                                 </menu>
-                            </menuItem>
-                            <menuItem title="File" id="dMs-cI-mzQ">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Edit" id="5QF-Oa-p0T">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
-                            <menuItem title="Format" id="jxT-CU-nIS">
-                                <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem title="View" id="H8h-7b-M4v">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -308,6 +299,7 @@
                                             <connections>
                                                 <outlet property="dataSource" destination="GjO-ci-Kog" id="CTj-2w-dC2"/>
                                                 <outlet property="delegate" destination="GjO-ci-Kog" id="tiY-mp-fLs"/>
+                                                <outlet property="menu" destination="6n5-BK-RQ0" id="dIg-3j-bh4"/>
                                             </connections>
                                         </outlineView>
                                     </subviews>
@@ -335,6 +327,26 @@
                     </connections>
                 </viewController>
                 <customObject id="uRm-VU-XYr" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <menu title="SideBarMenu" id="6n5-BK-RQ0">
+                    <items>
+                        <menuItem title="Delete" id="6h9-vR-m9y">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="onMenuDelete:" target="GjO-ci-Kog" id="YKG-iy-gJr"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem isSeparatorItem="YES" id="Qdn-X6-0G1"/>
+                        <menuItem title="Show in Finder" id="ox1-eq-ZQp">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="onMenuShowInFinder:" target="GjO-ci-Kog" id="rYd-hy-dYe"/>
+                            </connections>
+                        </menuItem>
+                    </items>
+                    <connections>
+                        <outlet property="delegate" destination="GjO-ci-Kog" id="o4W-Qk-q4Y"/>
+                    </connections>
+                </menu>
             </objects>
             <point key="canvasLocation" x="-203" y="1197"/>
         </scene>

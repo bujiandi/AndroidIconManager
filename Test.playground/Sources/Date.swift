@@ -202,10 +202,10 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Hash
         return NSDate(timeIntervalSince1970: timeInterval).debugDescription
     }
     
-    // MARK: - 可反射(Reflectable)
-    public func getMirror() -> MirrorType {
-        return reflect(self)
-    }
+//    // MARK: - 可反射(Reflectable)
+//    public func getMirror() -> MirrorType {
+//        return reflect(self)
+//    }
 
 //    public func getMirror() -> MirrorType {
 //        return reflect(self)

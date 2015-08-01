@@ -102,8 +102,10 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
     
     // MARK: 文件重命名
     public mutating func rename(newFileName:String) -> Bool {
+        //print("oldPath:\(fullPath)")
         let parent = fullPath.stringByDeletingLastPathComponent
         let newPath = parent.stringByAppendingPathComponent(newFileName)
+        //print("newPath:\(newPath)")
         let success = moveToPath(newPath)
         if success { self.fullPath = newPath }
         return success
