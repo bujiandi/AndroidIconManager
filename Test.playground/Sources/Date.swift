@@ -219,11 +219,11 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Hash
 }
 
 //// MARK: - 可反射(Reflectable)
-//extension Date : _Reflectable {
-//    public func getMirror() -> MirrorType {
-//        return reflect(self)
-//    }
-//}
+extension Date : _Reflectable {
+    public func _getMirror() -> MirrorType {
+        return _reflect(self)
+    }
+}
 
 // MARK: - 可以用 == 或 != 对比
 public func ==(lhs: Date, rhs: Date) -> Bool {
