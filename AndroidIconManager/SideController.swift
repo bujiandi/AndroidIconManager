@@ -60,15 +60,14 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         
     }
     
-    var dataSource:ImageDataSource { return ImageDataSource.shared }
-    
     
     func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int {
         if item == nil {
             return headers.count
         } else if outlineView.parentForItem(item) == nil {
             //let row = outlineView.rowForItem(item)
-            let dict = outlineView.rowForItem(item) == 0 ? ImageDataSource.shared.drawables : ImageDataSource.shared.mipmaps
+            let index:MapIndex<String, OrderedMap<String, [ImageItem]>> = outlineView.rowForItem(item) == 0 ? 0 : 1
+            let dict = ImageSource.images[index].1
             
             print(dict.count)
             return dict.count
@@ -82,7 +81,9 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         if item == nil {
             return headers[index]
         }
-        let dict = outlineView.rowForItem(item) == 0 ? ImageDataSource.shared.drawables : ImageDataSource.shared.mipmaps
+        let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = outlineView.rowForItem(item) == 0 ? 0 : 1
+        let dict = ImageSource.images[dictIndex].1
+
         let index = advance(dict.startIndex, index)
         return dict[index].0
     }
@@ -112,7 +113,8 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         
         let currentRow = outlineView.rowForItem(item)
         
-        let dict = parentRow == 0 ? ImageDataSource.shared.drawables : ImageDataSource.shared.mipmaps
+        let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = parentRow == 0 ? 0 : 1
+        let dict = ImageSource.images[dictIndex].1
         
         //print(dict)
         //print("index:\(currentRow - parentRow - 1)")
@@ -138,7 +140,10 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         var imageItems:[[ImageItem]] = []
         for row in outlineView.selectedRowIndexes {
             let item = outlineView.itemAtRow(row)
-            let dict = outlineView.rowForItem(outlineView.parentForItem(item)) == 0 ? ImageDataSource.shared.drawables : ImageDataSource.shared.mipmaps
+            
+            let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = outlineView.rowForItem(outlineView.parentForItem(item)) == 0 ? 0 : 1
+            let dict = ImageSource.images[dictIndex].1
+
             if let images = dict[item as! String] {
                 imageItems.append(images)
             }
@@ -152,7 +157,8 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         //print("begin:\(fieldEditor.string) ")
         let row = outlineView.rowForItem(outlineView.parentForItem(outlineView.itemAtRow(outlineView.selectedRow)))
         
-        let dict = row == 0 ? ImageDataSource.shared.drawables : ImageDataSource.shared.mipmaps
+        let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = row == 0 ? 0 : 1
+        let dict = ImageSource.images[dictIndex].1
         let index = advance(dict.startIndex, outlineView.selectedRow - row - 1)
         renameItem = dict[index]
         return true
@@ -180,11 +186,10 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
                 return true
             }
             for imageItem:ImageItem in item.1 {
-                var file:File = imageItem.file
-                let fileExtension = file.fileExtension //.getFileExtension([".9.png"])
+                let fileExtension = imageItem.file.fileExtension //.getFileExtension([".9.png"])
                 
-                if !file.rename("\(name).\(fileExtension)") {
-                    print("改名失败:\(file.fullPath) to:\(name).\(fileExtension)")
+                if !imageItem.file.rename("\(name).\(fileExtension)") {
+                    print("改名失败:\(imageItem.file.fullPath) to:\(name).\(fileExtension)")
                     renameItem = nil
                     return true
                 }
@@ -193,14 +198,11 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
             
             let row = outlineView.rowForItem(outlineView.parentForItem(outlineView.itemAtRow(outlineView.selectedRow)))
 
-            if row == 0 {
-                //let index = advance(ImageDataSource.shared.drawables.startIndex, outlineView.selectedRow - row - 1)
-                //ImageDataSource.shared.drawables[index] = (name, item.1)
-                ImageDataSource.shared.drawables[item.0] = nil
-                ImageDataSource.shared.drawables[name] = item.1
-            } else {
-                ImageDataSource.shared.mipmaps[item.0] = nil
-                ImageDataSource.shared.mipmaps[name] = item.1
+            let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = row == 0 ? 0 : 1
+            let dict = ImageSource.images[dictIndex].1
+            
+            if let index = dict.indexForKey(item.0) {
+                dict[index] = (name, item.1)
             }
             outlineView.reloadItem(headers[row == 0 ? 0 : 1], reloadChildren: true)
         } catch {

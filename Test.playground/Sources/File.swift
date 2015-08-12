@@ -15,10 +15,10 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
         setPath(fullPath)
     }
     public init(rootPath:String, fileName:String) {
-        setPath(rootPath.stringByAppendingPathComponent(fileName))
+        setPath((rootPath as NSString).stringByAppendingPathComponent(fileName))
     }
     public init(rootFile:File, fileName:String) {
-        setPath(rootFile.fullPath.stringByAppendingPathComponent(fileName))
+        setPath((rootFile.fullPath as NSString).stringByAppendingPathComponent(fileName))
     }
     private mutating func setPath(path:String) {
         self.fullPath = path
@@ -62,7 +62,7 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
     // MARK: 创建所有不存在的父路径
     public func makeParentDirs() -> Bool {
         let fileManager = NSFileManager.defaultManager()
-        let parentPath = fullPath.stringByDeletingLastPathComponent
+        let parentPath = (fullPath as NSString).stringByDeletingLastPathComponent
         var isDirectory:ObjCBool = false
         let isExists = fileManager.fileExistsAtPath(parentPath, isDirectory: &isDirectory)
         if !(isExists && isDirectory.boolValue) {
@@ -103,8 +103,8 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
     // MARK: 文件重命名
     public mutating func rename(newFileName:String) -> Bool {
         //print("oldPath:\(fullPath)")
-        let parent = fullPath.stringByDeletingLastPathComponent
-        let newPath = parent.stringByAppendingPathComponent(newFileName)
+        let parent = (fullPath as NSString).stringByDeletingLastPathComponent
+        let newPath = (parent as NSString).stringByAppendingPathComponent(newFileName)
         //print("newPath:\(newPath)")
         let success = moveToPath(newPath)
         if success { self.fullPath = newPath }
@@ -113,7 +113,7 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
 
     
     // MARK: 父目录
-    public var parentFile:File { return File(fullPath: fullPath.stringByDeletingLastPathComponent) }
+    public var parentFile:File { return File(fullPath: (fullPath as NSString).stringByDeletingLastPathComponent) }
     
     // MARK: 文件名
     public var fileName:String { return fullPath.stringByDeletingPathPrefix }
@@ -136,7 +136,7 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
             let fileNames:[String] = try fileManager.contentsOfDirectoryAtPath(fullPath)
             for fileName in fileNames {
                 files.append(File(rootPath: fullPath, fileName: fileName))
-                fullPath.stringByDeletingPathExtension
+                (fullPath as NSString).stringByDeletingPathExtension
             }
         } catch {}
         return files

@@ -88,7 +88,7 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
     func loadAndroidProjectImages(rootFile:File) {
         let resFile = File(rootFile: rootFile, fileName: "src/main/res")
         
-        ImageDataSource.shared.drawableList = [
+        ImageSource.drawableList = [
             File(rootFile: resFile, fileName: "drawable-xxxhdpi"),
             File(rootFile: resFile, fileName: "drawable-xxhdpi"),
             File(rootFile: resFile, fileName: "drawable-xhdpi"),
@@ -97,7 +97,7 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
             File(rootFile: resFile, fileName: "drawable-ldpi"),
             File(rootFile: resFile, fileName: "drawable")
         ]
-        ImageDataSource.shared.mipmapList = [
+        ImageSource.mipmapList = [
             File(rootFile: resFile, fileName: "mipmap-xxxhdpi"),
             File(rootFile: resFile, fileName: "mipmap-xxhdpi"),
             File(rootFile: resFile, fileName: "mipmap-xhdpi"),
@@ -109,29 +109,29 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
         
         let fileExtensions = ["png","jpg","jpeg"]
         
-        ImageDataSource.shared.drawables = [:]
-        for drawable in ImageDataSource.shared.drawableList where drawable.isExists {
+        ImageSource.drawables.removeAll()
+        for drawable in ImageSource.drawableList where drawable.isExists {
             //print(drawable.fileName)
             for file in drawable.subFileList where fileExtensions.contains(file.fileExtension) {
-                let name = file.fileName.stringByDeletingPathExtension
+                let name = (file.fileName as NSString).stringByDeletingPathExtension
                 let item = ImageItem(file, root: drawable)
 
-                if ImageDataSource.shared.drawables[name] == nil {
-                    ImageDataSource.shared.drawables[name] = []
+                if ImageSource.drawables[name] == nil {
+                    ImageSource.drawables[name] = []
                 }
-                ImageDataSource.shared.drawables[name]!.append(item)
+                ImageSource.drawables[name]!.append(item)
             }
         }
         
-        ImageDataSource.shared.mipmaps = [:]
-        for mipmap in ImageDataSource.shared.mipmapList where mipmap.isExists {
+        ImageSource.mipmaps.removeAll()
+        for mipmap in ImageSource.mipmapList where mipmap.isExists {
             for file in mipmap.subFileList where fileExtensions.contains(file.fileExtension) {
-                let name = file.fileName.stringByDeletingPathExtension
+                let name = (file.fileName as NSString).stringByDeletingPathExtension
                 let item = ImageItem(file, root: mipmap)
-                if ImageDataSource.shared.mipmaps[name] == nil {
-                    ImageDataSource.shared.mipmaps[name] = []
+                if ImageSource.mipmaps[name] == nil {
+                    ImageSource.mipmaps[name] = []
                 }
-                ImageDataSource.shared.mipmaps[name]!.append(item)
+                ImageSource.mipmaps[name]!.append(item)
             }
         }
         //print(ImageDataSource.shared.drawables)
@@ -140,20 +140,29 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
 
 }
 
-class ImageDataSource {
+struct ImageSource {
+    static var drawables:OrderedMap<String, [ImageItem]> = [:]
+    static var mipmaps:OrderedMap<String, [ImageItem]> = [:]
+    static var images:OrderedMap<String, OrderedMap<String, [ImageItem]>> = ["drawable":drawables, "mipmap":mipmaps]
     
-    private struct Instance {
-        static var instance:ImageDataSource = ImageDataSource()
-    }
-    class var shared:ImageDataSource { return Instance.instance }
-    
-    var drawables:[String:[ImageItem]] = [:]
-    var mipmaps:[String:[ImageItem]] = [:]
-
-    var drawableList:[File] = []
-    var mipmapList:[File] = []
-    
+    static var drawableList:[File] = []
+    static var mipmapList:[File] = []
 }
+
+//class ImageDataSource {
+//    
+//    private struct Instance {
+//        static var instance:ImageDataSource = ImageDataSource()
+//    }
+//    class var shared:ImageDataSource { return Instance.instance }
+//    
+//    var drawables:[String:[ImageItem]] = [:]
+//    var mipmaps:[String:[ImageItem]] = [:]
+//
+//    var drawableList:[File] = []
+//    var mipmapList:[File] = []
+//    
+//}
 
 class ImageItem : CustomStringConvertible , CustomDebugStringConvertible {
 

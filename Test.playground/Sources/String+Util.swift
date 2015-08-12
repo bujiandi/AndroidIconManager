@@ -155,7 +155,7 @@ extension String {
         case .Prefix:
             for char:Character in characters {
                 switch char {
-                case " ", "\n", "\r", "\r\n":   // \r\n 是一个字符  \n\r 是2个字符
+                case " ", "\n", "\r", "\r\n", "\t":   // \r\n 是一个字符  \n\r 是2个字符
                     start++
                 default:
                     return substringFromIndex(start)
@@ -165,7 +165,7 @@ extension String {
             let chars = characters.reverse()
             for char:Character in chars {
                 switch char {
-                case " ", "\n", "\r", "\r\n":   // \r\n 是一个字符  \n\r 是2个字符
+                case " ", "\n", "\r", "\r\n", "\t":   // \r\n 是一个字符  \n\r 是2个字符
                     start++
                 default:
                     return substringToIndex(chars.count - start)

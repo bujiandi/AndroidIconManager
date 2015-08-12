@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6" : 0,
+    "A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "862AC18C-1C32-428B-B07C-DA355755F51F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6" : "..\/SwiftFramework\/CustomArrayAndDictionary",
+    "A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34" : "AndroidIconManager\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "AndroidIconManager",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "AndroidIconManager.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bujiandi\/CustomArrayAndDictionary.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/bujiandi\/AndroidIconManager.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34"
+    }
+  ]
+}

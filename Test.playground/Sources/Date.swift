@@ -220,7 +220,7 @@ public struct Date : CustomStringConvertible, CustomDebugStringConvertible, Hash
 
 //// MARK: - 可反射(Reflectable)
 extension Date : _Reflectable {
-    public func _getMirror() -> MirrorType {
+    public func _getMirror() -> _MirrorType {
         return _reflect(self)
     }
 }

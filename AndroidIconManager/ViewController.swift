@@ -15,7 +15,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 
     @IBOutlet weak var tableView: NSTableView!
     
-    var dataSource:ImageDataSource { return ImageDataSource.shared }
+    //var dataSource:ImageDataSource { return ImageDataSource.shared }
 
     var imageItems:[[ImageItem]] = []
     
@@ -88,24 +88,24 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             let fileExtension = file.getFileExtension([".9.png"])
             
             
-            let array = fileName.stringByDeletingPathExtension.splitByString("@")
+            let array = (fileName as NSString).stringByDeletingPathExtension.splitByString("@")
             
             let name = array.first!
             let multiple:Float = array.count <= 1 ? 1.0 : (array.last! as NSString).floatValue
             var rootPath:String = ""
             switch multiple {
             case 1.0:
-                rootPath = ImageDataSource.shared.drawableList[4].fullPath  //drawable-mdpi
+                rootPath = ImageSource.drawableList[4].fullPath  //drawable-mdpi
             case 1.5:
-                rootPath = ImageDataSource.shared.drawableList[3].fullPath  //drawable-hdpi
+                rootPath = ImageSource.drawableList[3].fullPath  //drawable-hdpi
             case 2.0:
-                rootPath = ImageDataSource.shared.drawableList[2].fullPath  //drawable-xhdpi
+                rootPath = ImageSource.drawableList[2].fullPath  //drawable-xhdpi
             case 3.0:
-                rootPath = ImageDataSource.shared.drawableList[1].fullPath  //drawable-xxhdpi
+                rootPath = ImageSource.drawableList[1].fullPath  //drawable-xxhdpi
             case 4.0:
-                rootPath = ImageDataSource.shared.drawableList[0].fullPath  //drawable-xxxhdpi
+                rootPath = ImageSource.drawableList[0].fullPath  //drawable-xxxhdpi
             default:
-                rootPath = ImageDataSource.shared.drawableList[6].fullPath  //drawable
+                rootPath = ImageSource.drawableList[6].fullPath  //drawable
             }
             let root = File(fullPath: rootPath)
             let newFile = File(rootFile: root, fileName: "\(name).\(fileExtension)")
@@ -114,10 +114,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             
             let item = ImageItem(newFile, root:root)
             
-            if ImageDataSource.shared.drawables[name] == nil {
-                ImageDataSource.shared.drawables[name] = []
+            if ImageSource.drawables[name] == nil {
+                ImageSource.drawables[name] = []
             }
-            ImageDataSource.shared.drawables[name]!.insert(item, atIndex: 0)
+            ImageSource.drawables[name]!.insert(item, atIndex: 0)
             
             //names.append(name)
             names.insert(name)
@@ -127,7 +127,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         
         let oldCount = imageItems.count
         for name in names {
-            imageItems.append(ImageDataSource.shared.drawables[name]!)
+            imageItems.append(ImageSource.drawables[name]!)
         }
         let rows:NSIndexSet = NSIndexSet(indexesInRange: NSMakeRange(oldCount, imageItems.count - oldCount))
         
