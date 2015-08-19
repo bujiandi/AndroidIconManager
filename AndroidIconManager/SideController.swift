@@ -21,14 +21,45 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
     
     @IBAction func onMenuDelete(sender:NSMenuItem!) {
         print(outlineView.clickedRow)
+        if let item = outlineView.itemAtRow(outlineView.clickedRow) {
+            if let parentItem = outlineView.parentForItem(item) {
+                let parentRow = outlineView.rowForItem(parentItem)
+                let index = outlineView.clickedRow - parentRow - 1
+                let dict = ImageSource.images[parentRow == 0 ? 0 : 1].1
+                let (_, images) = dict.removeAtIndex(MapIndex<String, [ImageItem]>(rawValue: index))
+                outlineView.removeItemsAtIndexes(NSIndexSet(index: index), inParent: parentItem, withAnimation: [.SlideLeft, .EffectFade])
+                
+                // 删除文件
+                for image in images {
+                    image.file.deleteFile()
+                }
+            }
+        }
     }
     @IBAction func onMenuShowInFinder(sender:NSMenuItem!) {
-        
+        if let item = outlineView.itemAtRow(outlineView.clickedRow) {
+            if let parentItem = outlineView.parentForItem(item) {
+                let parentRow = outlineView.rowForItem(parentItem)
+                let index = outlineView.clickedRow - parentRow - 1
+                let dict = ImageSource.images[parentRow == 0 ? 0 : 1].1
+                let (_, images) = dict[MapIndex<String, [ImageItem]>(rawValue: index)]
+                
+                if let path = images.first?.file.fullPath {
+                    NSWorkspace.sharedWorkspace().selectFile(path, inFileViewerRootedAtPath: images.first!.root.fullPath)
+                }
+            }
+        }
     }
     
     func menuNeedsUpdate(menu: NSMenu) {
-        let enabled = outlineView.clickedRow > 0
-        menu.itemAtIndex(1)?.enabled = enabled
+        let item = outlineView.itemAtRow(outlineView.clickedRow)!
+        let enabled = outlineView.parentForItem(item) != nil
+        print("enabled:\(enabled)")
+        menu.itemArray[0].enabled = enabled
+        menu.itemArray[2].enabled = enabled
+
+        //menu.itemAtIndex(2)?.enabled = enabled
+
     }
     
     override func viewDidLoad() {

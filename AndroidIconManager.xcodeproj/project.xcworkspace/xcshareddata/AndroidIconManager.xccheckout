@@ -10,6 +10,8 @@
 	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6</key>
+		<string>https://github.com/bujiandi/CustomArrayAndDictionary.git</string>
 		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>
 		<string>https://github.com/bujiandi/AndroidIconManager.git</string>
 	</dict>
@@ -17,6 +19,8 @@
 	<string>AndroidIconManager.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6</key>
+		<string>../../../../SwiftFramework/CustomArrayAndDictionary</string>
 		<key>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</key>
 		<string>../..</string>
 	</dict>
@@ -35,6 +39,14 @@
 			<string>A74D473410FD8AD5BA3B4E452C21BAFD8CAF6C34</string>
 			<key>IDESourceControlWCCName</key>
 			<string>AndroidIconManager</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>53AF199A38C93CE6A65F32E6DDCF4F8BD482C5C6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CustomArrayAndDictionary</string>
 		</dict>
 	</array>
 </dict>

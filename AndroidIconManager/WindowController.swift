@@ -58,7 +58,7 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
         viewController.sideController = sideController
         //sideController.loadAndroidProgectPath(pathControl.URL?.path ?? "")
         
-        loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamReader/reader")
+        loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamWinnerBTJY/app")
     }
     
     
@@ -109,6 +109,8 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
         
         let fileExtensions = ["png","jpg","jpeg"]
         
+        
+        
         ImageSource.drawables.removeAll()
         for drawable in ImageSource.drawableList where drawable.isExists {
             //print(drawable.fileName)
@@ -134,6 +136,7 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
                 ImageSource.mipmaps[name]!.append(item)
             }
         }
+        ImageSource.images = ["drawable":ImageSource.drawables, "mipmap":ImageSource.mipmaps]
         //print(ImageDataSource.shared.drawables)
         sideController.reloadData()
     }

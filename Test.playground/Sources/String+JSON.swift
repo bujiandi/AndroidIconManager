@@ -51,6 +51,8 @@ public func ??=<T>(inout lhs:T, rhs:AnyObject?) {
     lhs = rhs ?? lhs
 }
 
+//public func ??<T>(optional: AnyObject?, @autoclosure defaultValue:() -> T) -> T {
+
 public func ??<T>(optional: AnyObject?, @autoclosure defaultValue:() -> T) -> T {
     
     guard let object: AnyObject = optional else {

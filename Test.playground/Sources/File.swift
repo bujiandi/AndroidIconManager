@@ -59,6 +59,14 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
         return false
     }
     
+    public func deleteFile() -> Bool {
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(fullPath)
+            return true
+        } catch {}
+        return false
+    }
+    
     // MARK: 创建所有不存在的父路径
     public func makeParentDirs() -> Bool {
         let fileManager = NSFileManager.defaultManager()
