@@ -50,52 +50,53 @@ extension String {
     }
     // MARK: - 长度
     public var length:Int {
-        return distance(startIndex, endIndex)
+        return self.startIndex.distanceTo(endIndex) //distance(startIndex, endIndex)
     }
     
     // MARK: - 字符串截取
     public func substringToIndex(index:Int) -> String {
-        return self.substringToIndex(advance(self.startIndex, index))
+        return self.substringToIndex(self.startIndex.advancedBy(index)) // advance(self.startIndex, index))
     }
     public func substringFromIndex(index:Int) -> String {
-        return self.substringFromIndex(advance(self.startIndex, index))
+        return self.substringFromIndex(self.startIndex.advancedBy(index)) //advance(self.startIndex, index))
     }
     public func substringWithRange(range:Range<Int>) -> String {
-        let start = advance(self.startIndex, range.startIndex)
-        let end = advance(self.startIndex, range.endIndex)
+        let start = startIndex.advancedBy(range.startIndex) //advance(self.startIndex, range.startIndex)
+        let end = startIndex.advancedBy(range.endIndex) //advance(self.startIndex, range.endIndex)
         return self.substringWithRange(start..<end)
     }
     
     public subscript(index:Int) -> Character{
-        return self[advance(self.startIndex, index)]
+        return self[self.startIndex.advancedBy(index)] //advance(self.startIndex, index)]
     }
     
     public subscript(subRange:Range<Int>) -> String {
-        return self[advance(self.startIndex, subRange.startIndex)..<advance(self.startIndex, subRange.endIndex)]
+        return self[self.startIndex.advancedBy(subRange.startIndex)..<self.startIndex.advancedBy(subRange.endIndex)]
+        //return self[advance(self.startIndex, subRange.startIndex)..<advance(self.startIndex, subRange.endIndex)]
     }
     
     // MARK: - 字符串修改 RangeReplaceableCollectionType
     public mutating func insert(newElement: Character, atIndex i: Int) {
-        insert(newElement, atIndex: advance(self.startIndex,i))
+        insert(newElement, atIndex: startIndex.advancedBy(i)) //advance(self.startIndex,i))
     }
     
-    public mutating func splice<S : CollectionType where S.Generator.Element == Character>(newElements: S, atIndex i:Int) {
-        splice(newElements, atIndex: advance(self.startIndex,i))
-    }
+//    public mutating func splice<S : CollectionType where S.Generator.Element == Character>(newElements: S, atIndex i:Int) {
+//        splice(newElements, atIndex: startIndex.advancedBy(i)) //advance(self.startIndex,i))
+//    }
     
     public mutating func replaceRange(subRange: Range<Int>, with newValues: String) {
-        let start = advance(self.startIndex, subRange.startIndex)
-        let end = advance(self.startIndex, subRange.endIndex)
+        let start = startIndex.advancedBy(subRange.startIndex) //advance(self.startIndex, range.startIndex)
+        let end = startIndex.advancedBy(subRange.endIndex) //advance(self.startIndex, range.endIndex)
         replaceRange(start..<end, with: newValues)
     }
     
     public mutating func removeAtIndex(i: Int) -> Character {
-        return removeAtIndex(advance(self.startIndex,i))
+        return removeAtIndex(startIndex.advancedBy(i)) //advance(self.startIndex,i))
     }
     
     public mutating func removeRange(subRange: Range<Int>) {
-        let start = advance(self.startIndex, subRange.startIndex)
-        let end = advance(self.startIndex, subRange.endIndex)
+        let start = startIndex.advancedBy(subRange.startIndex) //advance(self.startIndex, range.startIndex)
+        let end = startIndex.advancedBy(subRange.endIndex) //advance(self.startIndex, range.endIndex)
         removeRange(start..<end)
     }
     
@@ -134,7 +135,7 @@ extension String {
 
 extension String.UnicodeScalarView {
     public subscript (i: Int) -> UnicodeScalar {
-        return self[advance(self.startIndex, i)]
+        return self[startIndex.advancedBy(i)] //advance(self.startIndex, i)]
     }
 }
 

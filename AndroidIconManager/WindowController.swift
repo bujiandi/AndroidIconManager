@@ -58,7 +58,7 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
         viewController.sideController = sideController
         //sideController.loadAndroidProgectPath(pathControl.URL?.path ?? "")
         
-        loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamWinnerBTJY/app")
+        loadAndroidProjectPath("/Users/bujiandi/Documents/Android/ExamWinnerBRJY/app")
     }
     
     

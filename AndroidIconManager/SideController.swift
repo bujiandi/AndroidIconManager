@@ -115,7 +115,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = outlineView.rowForItem(item) == 0 ? 0 : 1
         let dict = ImageSource.images[dictIndex].1
 
-        let index = advance(dict.startIndex, index)
+        let index = dict.startIndex.advancedBy(index) //advance(dict.startIndex, index)
         return dict[index].0
     }
     
@@ -149,7 +149,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         
         //print(dict)
         //print("index:\(currentRow - parentRow - 1)")
-        let index = advance(dict.startIndex, currentRow - parentRow - 1)
+        let index = dict.startIndex.advancedBy(currentRow - parentRow - 1) //advance(dict.startIndex, currentRow - parentRow - 1)
         
         let path = dict[index].1[0].file.fullPath
         
@@ -190,7 +190,7 @@ class SideController: NSViewController, NSOutlineViewDataSource, NSOutlineViewDe
         
         let dictIndex:MapIndex<String, OrderedMap<String, [ImageItem]>> = row == 0 ? 0 : 1
         let dict = ImageSource.images[dictIndex].1
-        let index = advance(dict.startIndex, outlineView.selectedRow - row - 1)
+        let index = dict.startIndex.advancedBy(outlineView.selectedRow - row - 1) //advance(dict.startIndex, outlineView.selectedRow - row - 1)
         renameItem = dict[index]
         return true
     }
