@@ -31,7 +31,7 @@ public class HttpResponse {
         if statusCode < 0 { return "user cancel" }
         return NSHTTPURLResponse.localizedStringForStatusCode(statusCode)
     }
-
+    
 }
 
 public class HttpDownload:HttpResponse {
@@ -111,7 +111,6 @@ public class HttpRequest {
             super.connection(connection, didReceiveResponse: response)
             receiveData = nil
             // 获取将下载的文件大小 从 HeaderField  // Content-Length
-            let downloadResponse = self.downloadResponse
             downloadResponse.totalSize ??= downloadResponse.headerFields["Content-Length"]
             
             onProgress?(downloadResponse)
@@ -182,7 +181,7 @@ public class HttpRequest {
         var onComplete:OnHttpRequestComplete?
         
         var isCancel:Bool = false
-
+        
         private func cancelConnection() {
             isCancel = true
             connection?.cancel()
@@ -278,7 +277,7 @@ public class HttpRequest {
     public func cancel() {
         _listener?.cancel()
     }
-
+    
     private var _listener:ConnectListener?
     public func send(onComplete:OnHttpRequestComplete) {
         if let listener = _listener {
@@ -293,7 +292,7 @@ public class HttpRequest {
         //连接服务器
         _listener = listener
         listener.connection = NSURLConnection(request: request, delegate: listener)
-
+        
     }
     
     public func downloadTo(localPath:String, onProgress:OnHttpRequestDownload) {
@@ -310,5 +309,111 @@ public class HttpRequest {
         listener.connection = NSURLConnection(request: request, delegate: listener)
         
     }
+    
+}
+
+
+// MARK: - Http 队列
+struct HttpQueue {
+    
+    private typealias DownloadListener = HttpRequest.DownloadListener
+    private typealias ConnectListener = HttpRequest.ConnectListener
+    private typealias OnComplete = HttpRequest.OnHttpRequestComplete
+    private typealias OnProgress = HttpRequest.OnHttpRequestDownload
+    private typealias Request = (HttpRequest, OnComplete)
+    private typealias Download = (HttpRequest, String, OnProgress)
+    
+    private static var _requests:[Request] = []
+    private static var _downloads:[Download] = []
+    
+    static func cancel() {
+        _listener?.cancel()
+    }
+    static func cancelAll() {
+        _requests.removeAll()
+        _listener?.cancel()
+    }
+    
+    static func cancelDownload() {
+        _downloadListener?.cancel()
+    }
+    static func cancelAllDownload() {
+        _downloads.removeAll()
+        _downloadListener?.cancel()
+    }
+    
+    static func sendRequest(request:HttpRequest, onComplete:HttpRequest.OnHttpRequestComplete) {
+        _requests.append((request, onComplete))
+        sendNextIfHas(true)
+    }
+    
+    static func downloadRequest(request:HttpRequest, localPath:String, onProgress:HttpRequest.OnHttpRequestDownload) {
+        _downloads.append((request, localPath, onProgress))
+        downloadNextFileIfHas(true)
+    }
+    
+    private static func downloadNextFileIfHas(callByAdd:Bool) {
+        if _downloads.count == 0 {
+            _downloadListener = nil
+            return
+        }
+        if _downloads.count > 1 && callByAdd{
+            return
+        }
+        let (request, localPath, onProgress) = _downloads.first!
+        
+        let listener = DownloadListener(localPath: localPath) { self._listener = nil }
+        
+        listener.onProgress = {
+            (response) in
+            NSOperationQueue.mainQueue().addOperationWithBlock {
+                onProgress(response)
+            }
+            if response.isOver {
+                if _downloads.count > 0 { _downloads.removeFirst() }
+                downloadNextFileIfHas(false)
+            }
+        }
+        listener.response.tag = request.tag
+        
+        let urlRequest:NSMutableURLRequest = HttpRequest.getURLRequest(request)
+        _downloadListener = listener
+        listener.connection = NSURLConnection(request: urlRequest, delegate: listener)
+    }
+    
+    private static var _downloadListener:DownloadListener?
+    private static var _listener:ConnectListener?
+    
+    private static func sendNextIfHas(callByAdd:Bool) {
+        if _requests.count == 0 {
+            _listener = nil
+            return
+        }
+        if _requests.count > 1 && callByAdd {
+            return
+        }
+        let (request, onComplete) = _requests.first!
+        
+        let listener = ConnectListener() {  }
+        listener.onComplete = {
+            (response:HttpResponse) in
+            NSOperationQueue.mainQueue().addOperationWithBlock {
+                onComplete(response)
+            }
+            if _requests.count > 0 {
+                _requests.removeFirst()
+            }
+            sendNextIfHas(false)
+        }
+        listener.response.tag = request.tag
+        
+        let urlRequest:NSMutableURLRequest = HttpRequest.getURLRequest(request)
+        
+        //连接服务器
+        _listener = listener
+        listener.connection = NSURLConnection(request: urlRequest, delegate: listener)
+        
+    }
+    
     
 }
