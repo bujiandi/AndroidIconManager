@@ -15,6 +15,16 @@ public typealias JSONBoolean = Bool
 //}
 public struct JSON {
     
+    public static func getValue(o: AnyObject) -> Value {
+        switch(o) {
+        case (let v as NSDictionary)    : return Value(v)
+        case (let v as NSArray)         : return Value(v)
+        case (let v as NSNumber)        : return Value(v)
+        case (let v as String)          : return Value(v)
+        default                         : return Value(error: "JSON Unknow object: \(o)")
+        }
+    }
+    
     public enum ValueType {
         case JSONObject (Object)
         case JSONArray  ([Value])
@@ -40,6 +50,34 @@ public struct JSON {
         public init(_ v: Int) {
             self.value = .JSONNumber(NSNumber(integer: v))
         }
+        public init(_ v: Bool) {
+            self.value = .JSONNumber(NSNumber(bool: v))
+        }
+        public init(_ v: Double) {
+            self.value = .JSONNumber(NSNumber(double: v))
+        }
+        public init(_ v: Float) {
+            self.value = .JSONNumber(NSNumber(float: v))
+        }
+        public init(_ v: NSNumber) {
+            self.value = .JSONNumber(v)
+        }
+        public init(_ v: NSArray) {
+            var values:[Value] = []
+            for o in v {
+                values.append(JSON.getValue(o))
+            }
+            self.value = .JSONArray(values)
+        }
+        
+        public init(_ v: NSDictionary) {
+            let object = Object(minimumCapacity: v.count)
+            for (key, value) in v {
+                object.putValue(JSON.getValue(value), forKey: "\(key)")
+            }
+            self.value = .JSONObject(object)
+        }
+        
         
         public required init(booleanLiteral value: Bool) {
             self.value = .JSONNumber(NSNumber(bool: value))
@@ -57,17 +95,11 @@ public struct JSON {
         
         public typealias UnicodeScalarLiteralType = StaticString
         public required init(unicodeScalarLiteral value:UnicodeScalarLiteralType) {
-            self.value = .JSONString(String(value))
+            self.value = .JSONString(value.stringValue)
         }
         
         public required init(stringLiteral value: StaticString) {
             self.value = .JSONString(value.stringValue)
-        }
-        
-        
-        
-        public class func convertFromUnicodeScalarLiteral(value: UnicodeScalarLiteralType) -> Value {
-            return Value(String(value))
         }
         
         public required init(arrayLiteral elements: Value...) {
@@ -544,6 +576,32 @@ public struct MapIndex<Key : Hashable, Value> : ForwardIndexType, _Incrementable
     
 }
 
+extension NSData {
+    
+    var jsonValue:JSON.Value {
+        if let value = try? NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions(rawValue: 0)) {
+            return JSON.getValue(value)
+        }
+        return JSON.Value(error: "JSON Serialization fail")
+    }
+    
+    // 为了方便，增加一个NSData 直接转 UTF8字符串的功能，这个很常用
+    public func toUTF8String() -> String? {
+        return NSString(data: self, encoding: NSUTF8StringEncoding) as? String
+    }
+}
+
+
+extension String {
+    
+    var jsonValue:JSON.Value {
+        if let data = dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+            return data.jsonValue
+        }
+        return JSON.Value(error: "String encoding utf8 fail")
+    }
+    
+}
 
 /*
 public typealias JSONArray = (array:NSArray?, error:ErrorType?)
