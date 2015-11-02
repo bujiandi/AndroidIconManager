@@ -297,8 +297,18 @@ extension Date : Comparable {
     
 }
 */
+
 /*
 // MARK: - 可以直接赋值整数
+
+extension Date : IntegerLiteralConvertible {
+public typealias IntegerLiteralType = Int64
+
+static func __convertFromIntegerLiteral(value: Int64) -> Date {
+return Date(Double(value))
+}
+}
+
 extension Date : IntegerLiteralConvertible {
 typealias IntegerLiteralType = Int64
 
