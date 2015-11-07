@@ -6,6 +6,19 @@
 
 import Foundation
 
+extension CollectionType {
+    
+    // 用指定分隔符 连接 数组元素 为 字符串
+    public func componentsJoinedByString(separator:String) -> String {
+        var result:String = ""
+        for item in self {
+            if !result.isEmpty { result += separator }
+            result += "\(item)"
+        }
+        return result
+    }
+}
+
 extension Array {
     
     // 过滤符合条件的数组元素
@@ -15,18 +28,6 @@ extension Array {
             items.append(item)
         }
         return items
-    }
-    
-    // 用指定分隔符 连接 数组元素 为 字符串
-    public func componentsJoinedByString(separator: String) -> String {
-        var result = ""
-        for item:Element in self {
-            if !result.isEmpty {
-                result += separator
-            }
-            result += "\(item)"
-        }
-        return result
     }
     
 //    // 利用闭包功能 给数组添加 包涵方法

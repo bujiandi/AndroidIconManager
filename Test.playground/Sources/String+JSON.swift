@@ -1,18 +1,5 @@
 import Foundation
 
-public typealias JSONString = String
-public typealias JSONDouble = Double
-public typealias JSONInteger = Int
-public typealias JSONBoolean = Bool
-
-//enum JSON {
-//    case Object (JSONObject)
-//    case Array  (JSONArray)
-//    case String (JSONString)
-//    case Float  (JSONDouble)
-//    case Integer(JSONInteger)
-//    case Boolean(JSONBoolean)
-//}
 public struct JSON {
     
     public static func getValue(o: AnyObject) -> Value {
@@ -125,16 +112,62 @@ public struct JSON {
             self.value = .JSONObject(value)
         }
         
+        
+        
         public subscript (position: Int) -> Value {
-            
-            return Value(error: "[\(self)] isn't JSONArray !")
+            set {
+                switch (value) {
+                case .JSONObject(let dict)  :
+                    if position < dict.count {
+                        let index = ObjectIndex(rawValue: position)
+                        dict[index] = (dict[index].0, newValue)
+                    } else {
+                        fatalError("position[\(position)] out of JSON.Object count(\(dict.count)) !")
+                    }
+                case .JSONArray(var array)  :
+                    array[position] = newValue
+                    value = .JSONArray(array)
+                default :
+                    fatalError("[\(self)] isn't JSONArray ! and set \(newValue) fail !")
+                }
+            }
+            get {
+                switch (value) {
+                case .JSONObject(let dict)  : return dict[ObjectIndex(rawValue: position)].1
+                case .JSONArray(let array)  : return array[position]
+                default                     : return Value(error: "[\(self)] isn't JSONArray !")
+                }
+            }
         }
         
-        public subscript (key: String) -> Value? {
-            if case .JSONObject(let dict) = value {
-                return dict[key]
+        public subscript (position: ObjectIndex) -> (String, Value) {
+            set {
+                if case .JSONObject(let dict) = value {
+                    dict[position] = newValue
+                } else {
+                    fatalError("[\(self)] isn't JSONArray ! and set \(newValue) fail !")
+                }
             }
-            return Value(error: "[\(self)] isn't JSONObject !")
+            get {
+                if case .JSONObject(let dict) = value {
+                    return dict[position]
+                }
+                return ("JSON.Error",Value(error: "[\(self)] isn't JSONArray !"))
+            }
+        }
+        
+        public subscript (key: String) -> Value {
+            set {
+                if case .JSONObject(let dict) = value {
+                    dict[key] = newValue
+                }
+            }
+            get {
+                if case .JSONObject(let dict) = value {
+                    return dict[key] ?? Value(error: "not has key: \(key) !")
+                }
+                return Value(error: "[\(self)] isn't JSONObject !")
+            }
         }
         
         public var stringValue:String {
@@ -149,7 +182,7 @@ public struct JSON {
         public var integerValue:Int {
             switch value {
             case let .JSONNumber(num): return num.integerValue
-            case let .JSONString(str): return Int(str) ?? 0
+            case let .JSONString(str): return Int(str) ?? (str as NSString).integerValue
             default : break
             }
             return 0
@@ -158,7 +191,7 @@ public struct JSON {
         public var floatValue:Float {
             switch value {
             case let .JSONNumber(num): return num.floatValue
-            case let .JSONString(str): return Float(str) ?? 0
+            case let .JSONString(str): return Float(str) ?? (str as NSString).floatValue
             default : break
             }
             return 0
@@ -167,7 +200,7 @@ public struct JSON {
         public var doubleValue:Double {
             switch value {
             case let .JSONNumber(num): return num.doubleValue
-            case let .JSONString(str): return Double(str) ?? 0
+            case let .JSONString(str): return Double(str) ?? (str as NSString).doubleValue
             default : break
             }
             return 0
@@ -180,7 +213,7 @@ public struct JSON {
                 switch str {
                 case "true":    return true;
                 case "false":   return false;
-                default:        return (Int(str) ?? 0) != 0
+                default:        return (str as NSString).boolValue
                 }
             default : break
             }
@@ -201,7 +234,7 @@ public struct JSON {
         private var _slice:Bool = false
         
         public typealias Element = (String, Value)
-        public typealias Index = MapIndex<String, Value>
+        public typealias Index = ObjectIndex
         /// Create an empty dictionary.
         public convenience init() {
             self.init(minimumCapacity:10)
@@ -225,7 +258,7 @@ public struct JSON {
         /// - Complexity: Amortized O(1) if `self` does not wrap a bridged
         ///   `NSDictionary`, O(N) otherwise.
         public var startIndex: Index {
-            return MapIndex<String, Value>(rawValue: 0)
+            return ObjectIndex(rawValue: 0)
         }
         /// The collection's "past the end" position.
         ///
@@ -235,13 +268,13 @@ public struct JSON {
         ///
         /// - Complexity: Amortized O(1) if `self` does not wrap a bridged
         ///   `NSDictionary`, O(N) otherwise.
-        public var endIndex: Index { return MapIndex<String, Value>(rawValue: _count - 1) }
+        public var endIndex: Index { return ObjectIndex(rawValue: _count - 1) }
         /// Returns the `Index` for the given key, or `nil` if the key is not
         /// present in the dictionary.
         public func indexForKey(key: String) -> Index? {
             let hasValue = key.hashValue
             for var i:Int = 0; i < _count; i++ {
-                if _pointer.advancedBy(_offset + i).memory == hasValue { return MapIndex<Key, Value>(rawValue: i) }
+                if _pointer.advancedBy(_offset + i).memory == hasValue { return ObjectIndex(rawValue: i) }
             }
             return nil
         }
@@ -295,7 +328,7 @@ public struct JSON {
             _pointer.advancedBy(_offset + _count).initialize(key.hashValue)
             _keys.append(key)
             _values.append(value)
-            return MapIndex<Key, Value>(rawValue:_count++)
+            return ObjectIndex(rawValue:_count++)
         }
         /// Update the value stored in the dictionary for the given key, or, if they
         /// key does not exist, add a new key-value pair to the dictionary.
@@ -492,12 +525,55 @@ public struct JSON {
         
         public mutating func next() -> (String, Value)? {
             if _position < _dictionary.count {
-                return _dictionary[MapIndex<String, Value>(rawValue: _position++)]
+                return _dictionary[ObjectIndex(rawValue: _position++)]
             }
             return nil
         }
     }
+    
+    public struct ObjectIndex : ForwardIndexType, _Incrementable, Equatable, Comparable, RawRepresentable, IntegerLiteralConvertible {
+        public typealias IntegerLiteralType = Int
+        
+        public init(integerLiteral value: IntegerLiteralType) {
+            _rawValue = value
+        }
+        
+        public typealias RawValue = Int
+        
+        public init(rawValue: RawValue) {
+            _rawValue = rawValue
+        }
+        /// The corresponding value of the "raw" type.
+        ///
+        /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
+        public var rawValue: RawValue { return _rawValue }
+        private var _rawValue:RawValue
+        /// Returns the next consecutive value after `self`.
+        ///
+        /// - Requires: The next value is representable.
+        public func successor() -> ObjectIndex {
+            return ObjectIndex(rawValue: _rawValue + 1)
+        }
+        
+    }
 }
+
+public func ==(lhs: JSON.ObjectIndex, rhs: JSON.ObjectIndex) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+}
+public func < (lhs: JSON.ObjectIndex, rhs: JSON.ObjectIndex) -> Bool {
+    return lhs.rawValue < rhs.rawValue
+}
+public func <= (lhs: JSON.ObjectIndex, rhs: JSON.ObjectIndex) -> Bool {
+    return lhs.rawValue <= rhs.rawValue
+}
+public func >= (lhs: JSON.ObjectIndex, rhs: JSON.ObjectIndex) -> Bool {
+    return lhs.rawValue >= rhs.rawValue
+}
+public func > (lhs: JSON.ObjectIndex, rhs: JSON.ObjectIndex) -> Bool {
+    return lhs.rawValue > rhs.rawValue
+}
+
 
 extension JSON.Value : CustomStringConvertible, CustomDebugStringConvertible {
     /// A textual representation of `self`.
@@ -534,47 +610,7 @@ extension JSON.Object : _Reflectable {
     }
 }
 
-public func ==<Key : Hashable, Value>(lhs: MapIndex<Key, Value>, rhs: MapIndex<Key, Value>) -> Bool {
-    return lhs.rawValue == rhs.rawValue
-}
-public func < <Key : Hashable, Value>(lhs: MapIndex<Key, Value>, rhs: MapIndex<Key, Value>) -> Bool {
-    return lhs.rawValue < rhs.rawValue
-}
-public func <= <Key : Hashable, Value>(lhs: MapIndex<Key, Value>, rhs: MapIndex<Key, Value>) -> Bool {
-    return lhs.rawValue <= rhs.rawValue
-}
-public func >= <Key : Hashable, Value>(lhs: MapIndex<Key, Value>, rhs: MapIndex<Key, Value>) -> Bool {
-    return lhs.rawValue >= rhs.rawValue
-}
-public func > <Key : Hashable, Value>(lhs: MapIndex<Key, Value>, rhs: MapIndex<Key, Value>) -> Bool {
-    return lhs.rawValue > rhs.rawValue
-}
 
-public struct MapIndex<Key : Hashable, Value> : ForwardIndexType, _Incrementable, Equatable, Comparable, RawRepresentable, IntegerLiteralConvertible {
-    public typealias IntegerLiteralType = Int
-    
-    public init(integerLiteral value: IntegerLiteralType) {
-        _rawValue = value
-    }
-    
-    public typealias RawValue = Int
-    
-    public init(rawValue: RawValue) {
-        _rawValue = rawValue
-    }
-    /// The corresponding value of the "raw" type.
-    ///
-    /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
-    public var rawValue: RawValue { return _rawValue }
-    private var _rawValue:RawValue
-    /// Returns the next consecutive value after `self`.
-    ///
-    /// - Requires: The next value is representable.
-    public func successor() -> MapIndex<Key, Value> {
-        return MapIndex<Key, Value>(rawValue: _rawValue + 1)
-    }
-    
-}
 
 extension NSData {
     
