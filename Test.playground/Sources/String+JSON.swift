@@ -2,6 +2,13 @@ import Foundation
 
 public struct JSON {
     
+    public static func getValue(o: AnyObject?) -> Value? {
+        if let object:AnyObject = o {
+            return JSON.getValue(object)
+        }
+        return nil
+    }
+    
     public static func getValue(o: AnyObject) -> Value {
         switch(o) {
         case (let v as NSDictionary)    : return Value(v)
@@ -177,6 +184,24 @@ public struct JSON {
             default : break
             }
             return ""
+        }
+        
+        public var unsignedLongLongValue:UInt64 {
+            switch value {
+            case let .JSONNumber(num): return num.unsignedLongLongValue
+            case let .JSONString(str): return UInt64(str) ?? UInt64(bitPattern: (str as NSString).longLongValue)
+            default : break
+            }
+            return 0
+        }
+        
+        public var longLongValue:Int64 {
+            switch value {
+            case let .JSONNumber(num): return num.longLongValue
+            case let .JSONString(str): return Int64(str) ?? (str as NSString).longLongValue
+            default : break
+            }
+            return 0
         }
         
         public var integerValue:Int {
@@ -638,6 +663,7 @@ extension String {
     }
     
 }
+
 
 /*
 public typealias JSONArray = (array:NSArray?, error:ErrorType?)

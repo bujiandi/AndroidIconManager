@@ -112,8 +112,9 @@ extension String {
     
     /// 给URL解编码
     public func decodeURL() -> String! {
-        let str:NSString = self
-        return str.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        //let str:NSString = self
+        //return str.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        return self.stringByRemovingPercentEncoding
     }
     
     /// 给URL编码

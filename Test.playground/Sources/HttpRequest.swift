@@ -111,7 +111,8 @@ public class HttpRequest {
             super.connection(connection, didReceiveResponse: response)
             receiveData = nil
             // 获取将下载的文件大小 从 HeaderField  // Content-Length
-            downloadResponse.totalSize ??= downloadResponse.headerFields["Content-Length"]
+            
+            downloadResponse.totalSize = JSON.getValue(downloadResponse.headerFields["Content-Length"])?.unsignedLongLongValue ?? 0
             
             onProgress?(downloadResponse)
         }
@@ -203,7 +204,7 @@ public class HttpRequest {
                 return
             }
             
-            let dateString = res.allHeaderFields["Date"] ?? "Thu, 01 Jan 1970 00:00:00 GMT"
+            let dateString:String = res.allHeaderFields["Date"] as? String ?? "Thu, 01 Jan 1970 00:00:00 GMT"
             
             let format  = NSDateFormatter()
             format.locale = NSLocale(localeIdentifier: "en_US")
