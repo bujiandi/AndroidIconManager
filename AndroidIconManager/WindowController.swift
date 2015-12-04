@@ -46,9 +46,9 @@ class WindowController: NSWindowController, NSSplitViewDelegate {
         window?.setFrame(NSMakeRect(1000, 500, 1000, 480), display: false)
         let splitController = self.contentViewController! as! NSSplitViewController
         
-        splitController.splitView.delegate = self
+        //splitController.splitView.delegate = self
         // 设置左侧 item 不随缩放变化
-        splitController.splitView.setHoldingPriority(300, forSubviewAtIndex: 0)
+        //splitController.splitView.setHoldingPriority(300, forSubviewAtIndex: 0)
         
 
         sideController = splitController.splitViewItems[0].viewController as! SideController

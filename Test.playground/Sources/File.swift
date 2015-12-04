@@ -51,8 +51,9 @@ public struct File : Equatable, CustomStringConvertible, CustomDebugStringConver
             let fileNames:[String] = try fileManager.contentsOfDirectoryAtPath(fullPath)
             for fileName in fileNames {
                 if names.count == 0 { break }
-                let index = names.indexOf() { $0 == fileName }
-                if index != NSNotFound { names.removeAtIndex(index) }
+                if let index = names.indexOf({ $0 == fileName })  {
+                    names.removeAtIndex(index)
+                }
             }
             return names.count == 0
         } catch {}
