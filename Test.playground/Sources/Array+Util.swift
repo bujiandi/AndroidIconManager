@@ -6,16 +6,26 @@
 
 import Foundation
 
-
+//extension DictionaryLiteral {
+//    // 用指定分隔符 连接 数组元素 为 字符串
+//    public func componentsJoinedByString(separator:String, includeElement:(Generator.Element) -> String) -> String {
+//        var result:String = ""
+//        for item:Generator.Element in self {
+//            if !result.isEmpty { result += separator }
+//            result += includeElement(item)
+//        }
+//        return result
+//    }
+//}
 
 extension CollectionType {
     
     // 用指定分隔符 连接 数组元素 为 字符串
-    public func componentsJoinedByString(separator:String) -> String {
+    public func componentsJoinedByString(separator:String, includeElement:(Generator.Element) -> String = { "\($0)" }) -> String {
         var result:String = ""
         for item:Self.Generator.Element in self {
             if !result.isEmpty { result += separator }
-            result += "\(item)"
+            result += includeElement(item)
         }
         return result
     }
