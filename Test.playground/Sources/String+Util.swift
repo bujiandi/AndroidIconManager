@@ -176,6 +176,10 @@ extension String {
         }
         return ""
     }
+    
+    public func joinIn(prefix:String, _ suffix:String) -> String {
+        return "\(prefix)\(self)\(suffix)"
+    }
 }
 
 /*
